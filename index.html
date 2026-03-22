@@ -2,353 +2,219 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Copilot LP - Entrevista</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Diagnóstico — Agência de Viagens</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html{height:100%}
-body{
-  font-family:'DM Sans',sans-serif;
-  background:#0a0e27;
-  color:#e0e0e0;
-  min-height:100%;
-  background-image:radial-gradient(ellipse at 20% 0%,rgba(0,119,182,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(0,180,216,.06) 0%,transparent 50%);
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --bg: #f0f4f8; --white: #ffffff; --bot-bg: #ffffff;
+  --user-bg: #1a56db; --user-text: #ffffff; --bot-text: #1e293b;
+  --muted: #94a3b8; --accent: #1a56db; --accent-light: #e8effd;
+  --green: #10b981; --border: #e2e8f0; --shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
-.wrap{max-width:560px;margin:0 auto;padding:20px 20px 160px}
-
-/* Header */
-.hdr{position:sticky;top:0;z-index:10;background:#0a0e27;padding:16px 0 12px}
-.hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.hdr-label{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:#546e7a;letter-spacing:1.5px;text-transform:uppercase}
-.hdr-count{font-size:13px;color:#546e7a}
-.prog{width:100%;height:4px;background:#1a1a2e;border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,#00b4d8,#0077b6);border-radius:2px;transition:width .5s ease}
-
-/* Intro */
-.intro{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:40px 0}
-.intro-icon{font-size:56px;margin-bottom:16px}
-.intro-title{font-family:'Outfit',sans-serif;font-size:32px;font-weight:800;color:#e0f7fa;margin-bottom:12px;letter-spacing:-1px}
-.intro-sub{font-family:'Outfit',sans-serif;font-size:18px;color:#90caf9;margin-bottom:32px;font-weight:300}
-.intro-box{background:rgba(0,180,216,.08);border:1px solid rgba(0,180,216,.2);border-radius:16px;padding:24px 28px;max-width:420px;margin-bottom:40px;text-align:left}
-.intro-box p{font-size:15px;color:#b0bec5;line-height:1.7}
-.intro-box strong{color:#e0f7fa}
-
-/* Buttons */
-.btn-start{font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;background:linear-gradient(135deg,#00b4d8,#0077b6);color:#fff;border:none;border-radius:14px;padding:16px 48px;cursor:pointer;box-shadow:0 4px 24px rgba(0,119,182,.3)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0a0e27 30%);padding:40px 20px 28px;display:flex;justify-content:center;z-index:20}
-.nav-inner{display:flex;gap:12px;width:100%;max-width:560px}
-.btn-back{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;background:rgba(255,255,255,.06);color:#90a4ae;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 24px;cursor:pointer}
-.btn-next{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,#00b4d8,#0077b6);color:#fff;border:none;border-radius:12px;padding:14px 32px;cursor:pointer;flex:1;box-shadow:0 4px 20px rgba(0,119,182,.25)}
-.btn-next:disabled{background:#263238;color:#546e7a;cursor:not-allowed;box-shadow:none}
-.btn-send{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,#00c853,#00897b);color:#fff;border:none;border-radius:12px;padding:14px 32px;cursor:pointer;flex:1;box-shadow:0 4px 20px rgba(0,200,83,.25)}
-.btn-send:disabled{background:#455a64;opacity:.7;cursor:wait;box-shadow:none}
-
-/* Block header */
-.blk-hdr{margin-bottom:32px;padding-top:8px}
-.blk-badge{display:inline-flex;align-items:center;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.2);border-radius:10px;padding:6px 14px;margin-bottom:14px}
-.blk-badge span{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:#00b4d8}
-.blk-title{font-family:'Outfit',sans-serif;font-size:26px;font-weight:800;color:#e0f7fa;margin-bottom:6px;letter-spacing:-.5px}
-.blk-sub{font-size:15px;color:#78909c}
-
-/* Fields */
-.field{margin-bottom:28px}
-.field label{font-size:15px;font-weight:600;color:#e0f7fa;display:block;margin-bottom:8px;line-height:1.5}
-.field .req{color:#ef5350;margin-left:4px}
-.field input,.field textarea{
-  width:100%;font-family:'DM Sans',sans-serif;font-size:15px;
-  background:rgba(255,255,255,.04);color:#e0e0e0;
-  border:1px solid rgba(255,255,255,.1);border-radius:12px;
-  padding:14px 16px;outline:none;transition:border-color .2s,background .2s;line-height:1.6
-}
-.field textarea{resize:none;overflow:hidden;min-height:80px}
-.field input:focus,.field textarea:focus{border-color:#00b4d8;background:rgba(0,180,216,.05)}
-.field input::placeholder,.field textarea::placeholder{color:#546e7a}
-
-/* Success */
-.success{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:40px 0}
-.success-icon{font-size:64px;margin-bottom:20px}
-.success-title{font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;color:#e0f7fa;margin-bottom:12px}
-.success-text{font-size:16px;color:#90caf9;margin-bottom:32px;max-width:380px;line-height:1.6}
-.success-box{background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.25);border-radius:14px;padding:20px 24px;max-width:360px}
-.success-box p{font-size:14px;color:#a5d6a7;line-height:1.6}
-
-.hidden{display:none}
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+.header { width: 100%; max-width: 480px; background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 18px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; box-shadow: var(--shadow); }
+.logo { width: 40px; height: 40px; background: linear-gradient(135deg, #1a56db, #3b82f6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.header-text h3 { font-size: 14px; font-weight: 700; color: #1e293b; }
+.header-text p { font-size: 11px; color: var(--muted); }
+.status { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--green); font-weight: 600; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.prog-wrap { width: 100%; max-width: 480px; padding: 10px 18px 6px; background: var(--bg); }
+.prog-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, #1a56db, #60a5fa); border-radius: 99px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+.prog-label { font-size: 10px; color: var(--muted); margin-top: 4px; display: flex; justify-content: space-between; }
+.chat { width: 100%; max-width: 480px; flex: 1; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+.msg-row { display: flex; opacity: 0; transform: translateY(10px); transition: all .35s ease; }
+.msg-row.show { opacity: 1; transform: translateY(0); }
+.msg-row.bot { justify-content: flex-start; }
+.msg-row.user { justify-content: flex-end; margin-bottom: 6px; }
+.bubble { max-width: 80%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.55; }
+.bot .bubble { background: var(--white); color: var(--bot-text); border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.user .bubble { background: var(--user-bg); color: var(--user-text); border-bottom-right-radius: 4px; }
+.typing-row { display: flex; margin-bottom: 4px; }
+.typing-bubble { background: var(--white); border-radius: 18px; border-bottom-left-radius: 4px; padding: 12px 16px; display: flex; gap: 5px; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.typing-bubble span { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
+.typing-bubble span:nth-child(2) { animation-delay: .2s; }
+.typing-bubble span:nth-child(3) { animation-delay: .4s; }
+@keyframes bounce { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-5px);opacity:1} }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 14px 12px; width: 100%; max-width: 480px; opacity: 0; transform: translateY(6px); transition: all .35s ease; }
+.opts.show { opacity: 1; transform: translateY(0); }
+.opt { background: var(--white); border: 1.5px solid var(--border); color: var(--accent); border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all .18s ease; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.opt:hover { background: var(--accent-light); border-color: var(--accent); }
+.opt.picked { background: var(--accent); border-color: var(--accent); color: #fff; }
+.opt:disabled { opacity: .5; cursor: default; }
+.input-bar { width: 100%; max-width: 480px; padding: 10px 14px 20px; background: var(--bg); display: flex; gap: 8px; align-items: center; position: sticky; bottom: 0; }
+.txt-in { flex: 1; background: var(--white); border: 1.5px solid var(--border); border-radius: 24px; padding: 11px 18px; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--bot-text); outline: none; transition: border .2s; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.txt-in:focus { border-color: var(--accent); }
+.txt-in::placeholder { color: var(--muted); }
+.txt-in:disabled { opacity: .5; }
+.send { width: 42px; height: 42px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .15s, opacity .15s; flex-shrink: 0; }
+.send:hover { transform: scale(1.08); }
+.send:disabled { opacity: .4; cursor: default; transform: none; }
+.send svg { fill: white; }
+.final { width: 100%; max-width: 480px; padding: 24px 18px 32px; display: none; flex-direction: column; gap: 0; animation: fadeUp .5s ease forwards; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.final-card { background: var(--white); border-radius: 20px; padding: 24px 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.final-icon { width: 56px; height: 56px; background: linear-gradient(135deg, #1a56db, #60a5fa); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 14px; }
+.final-card h2 { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+.final-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.summary-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
+.summary-item { border-bottom: 1px solid var(--border); padding: 10px 0; }
+.summary-item:last-child { border-bottom: none; }
+.summary-q { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.summary-a { font-size: 14px; font-weight: 600; color: #1e293b; }
+.btn-wa { width: 100%; background: #25D366; border: none; border-radius: 14px; padding: 15px; color: white; font-size: 15px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 14px rgba(37,211,102,.3); margin-bottom: 10px; }
+.btn-wa:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,211,102,.4); }
+.btn-copy { width: 100%; background: transparent; border: 1.5px solid var(--border); border-radius: 14px; padding: 13px; color: var(--muted); font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all .18s; }
+.btn-copy:hover { border-color: var(--accent); color: var(--accent); }
 </style>
 </head>
 <body>
-
-<div class="wrap" id="wrap">
-
-  <!-- HEADER (sticky) -->
-  <div class="hdr" id="hdr">
-    <div class="hdr-row">
-      <span class="hdr-label">Copilot LP</span>
-      <span class="hdr-count" id="counter"></span>
-    </div>
-    <div class="prog"><div class="prog-fill" id="progbar" style="width:0%"></div></div>
-  </div>
-
-  <!-- ALL PAGES -->
-  <div id="pages"></div>
-
+<div class="header">
+  <div class="logo">✈️</div>
+  <div class="header-text"><h3>Diagnóstico da Agência</h3><p>Responde em menos de 5 minutos</p></div>
+  <div class="status"><div class="dot"></div> Ao vivo</div>
 </div>
-
-<!-- NAV BAR -->
-<div class="nav hidden" id="navbar">
-  <div class="nav-inner">
-    <button class="btn-back" id="btnBack" onclick="prev()">&#8592; Voltar</button>
-    <button class="btn-next" id="btnNext" onclick="next()">Pr&#243;ximo &#8594;</button>
-  </div>
+<div class="prog-wrap" id="progWrap">
+  <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="prog-label"><span id="progText">Iniciando...</span><span id="progPct">0%</span></div>
 </div>
-
+<div class="chat" id="chat"></div>
+<div class="input-bar" id="inputBar">
+  <input class="txt-in" id="txtIn" placeholder="Digite aqui..." disabled />
+  <button class="send" id="sendBtn" disabled>
+    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+  </button>
+</div>
+<div class="final" id="finalArea"></div>
 <script>
-// === CONFIG ===
-var SU_URL = 'https://tgijwodbzdtcatqkxfxl.supabase.co';
-var SU_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnaWp3b2RiemR0Y2F0cWt4ZnhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNTk4NTksImV4cCI6MjA4ODkzNTg1OX0.uqfn2ieN36QXjesQAJAaPMxfiAludDO3nIs52JLHnO4';
-
-// === BLOCKS DATA ===
-var blocks = [
-  {id:'intro', icon:'', title:'', fields:[]},
-  {id:'ctx', icon:'01', title:'Contexto Geral', sub:'Sobre voce e sua operacao', fields:[
-    {k:'interviewee_name',l:'Seu nome',p:'Ex: Filipe',t:'input',rq:1},
-    {k:'tempo_lifeplanner',l:'Ha quanto tempo voce e LifePlanner da Prudential?',p:'Ex: 5 anos',t:'input'},
-    {k:'clientes_ativos',l:'Quantos clientes ativos voce tem hoje na carteira?',p:'Numero de clientes e apolices',t:'ta'},
-    {k:'meta_mensal',l:'Qual e a sua meta mensal? (vendas novas + renovacoes)',p:'Descreva sua meta',t:'ta'},
-    {k:'ferramentas_sistemas',l:'Quais ferramentas/sistemas voce usa no dia a dia?',p:'Sistema Prudential, WhatsApp, planilhas, agenda, CRM...',t:'ta'},
-    {k:'equipe_assessora',l:'Voce trabalha sozinho ou tem equipe? Fale sobre sua assessora.',p:'Quanto paga? Quantas horas? O que ela faz exatamente?',t:'ta'}
-  ]},
-  {id:'rot', icon:'02', title:'Rotina Diaria', sub:'Como e o seu dia real de trabalho', fields:[
-    {k:'dia_tipico',l:'Descreva seu dia de ontem (ou ultimo dia util) do inicio ao fim.',p:'Hora a hora: o que fez, quanto tempo levou...',t:'ta'},
-    {k:'reunioes_por_semana',l:'Quantas reunioes com clientes/prospects voce faz por semana?',p:'Diferencie: reunioes de venda vs. manutencao/pos-venda',t:'ta'},
-    {k:'preparacao_reuniao',l:'O que voce faz ANTES de uma reuniao com cliente?',p:'Quanto tempo leva? Onde busca informacoes?',t:'ta'},
-    {k:'pos_reuniao',l:'E DEPOIS da reuniao? O que acontece?',p:'Anota onde? Manda e-mail? WhatsApp? Quem faz o follow-up?',t:'ta'},
-    {k:'percentual_administrativo',l:'Quanto do seu dia e gasto com coisas que NAO sao conversar com cliente?',p:'Estime um percentual e diga quais tarefas',t:'ta'}
-  ]},
-  {id:'pv', icon:'03', title:'Pos-venda e Sinistros', sub:'Backoffice e atendimento ao cliente', fields:[
-    {k:'processo_sinistro',l:'Quando um cliente precisa acionar o seguro (sinistro), como funciona hoje?',p:'Quem ele procura? O que voce faz? Quanto tempo leva?',t:'ta'},
-    {k:'sinistros_por_mes',l:'Quantos sinistros voce acompanha por mes em media?',p:'De quais tipos? (morte, doenca grave, invalidez, cirurgia...)',t:'ta'},
-    {k:'problemas_sinistro',l:'Quais sao os maiores problemas no processo de sinistro?',p:'Documentos faltando? Demora? Falta de visibilidade?',t:'ta'},
-    {k:'demandas_pos_venda',l:'Alem de sinistros, quais outras demandas de pos-venda os clientes trazem?',p:'Alteracao de beneficiario, pagamento, reabilitacao, duvidas, IR...',t:'ta'},
-    {k:'divisao_assessora',l:'Dessas demandas, quais a assessora resolve e quais so voce pode fazer?',p:'Descreva a divisao de trabalho',t:'ta'},
-    {k:'perda_cliente',l:'Ja perdeu cliente por falta de acompanhamento ou demora?',p:'Se sim, conte o caso. Qual foi o impacto?',t:'ta'},
-    {k:'controle_renovacoes',l:'Como voce controla quais coberturas estao vencendo?',p:'Planilha? Memoria? Alerta do sistema?',t:'ta'}
-  ]},
-  {id:'vd', icon:'04', title:'Vendas e Prospeccao', sub:'Funil de vendas e conversao', fields:[
-    {k:'origem_clientes',l:'De onde vem os seus novos clientes?',p:'Indicacoes? Redes sociais? Eventos? Base fria?',t:'ta'},
-    {k:'processo_venda',l:'Do primeiro contato ate fechar a venda, como funciona?',p:'Quantas reunioes? Quanto tempo? O que trava?',t:'ta'},
-    {k:'escolha_produto',l:'Como voce decide qual produto recomendar para cada cliente?',p:'Simulacao no sistema? Calcula na cabeca? Planilha?',t:'ta'},
-    {k:'prospects_ativos',l:'Quantos prospects voce esta acompanhando que ainda nao fecharam?',p:'Como controla isso?',t:'ta'},
-    {k:'taxa_conversao',l:'Qual sua taxa de conversao aproximada? De cada 10, quantos fecham?',p:'Estimativa',t:'input'}
-  ]},
-  {id:'pr', icon:'05', title:'Conhecimento de Produtos', sub:'Seguranca sobre os produtos Prudential', fields:[
-    {k:'seguranca_produtos',l:'Voce se sente seguro para explicar todos os detalhes dos produtos Prudential?',p:'Carencias, exclusoes, resgate, faixas etarias...',t:'ta'},
-    {k:'duvida_resposta',l:'Quando um cliente faz uma pergunta que voce nao sabe responder, o que faz?',p:'Liga pra Prudential? Consulta condicoes gerais?',t:'ta'},
-    {k:'atualizacao_produtos',l:'Quando lanca produto novo ou muda regras, como fica sabendo?',p:'Treinamento? E-mail? Comunicacao do MFB?',t:'ta'}
-  ]},
-  {id:'fn', icon:'06', title:'Gestao Financeira', sub:'Controle do negocio', fields:[
-    {k:'controle_comissoes',l:'Como voce controla suas comissoes e receitas?',p:'Planilha? Sistema? A assessora faz?',t:'ta'},
-    {k:'controle_despesas',l:'E o controle de despesas do negocio?',p:'Gasolina, almocos, assessora, materiais...',t:'ta'},
-    {k:'custo_por_venda',l:'Voce sabe quanto custa cada venda? Quanto gasta para fechar um cliente?',p:'Se nao sabe, tudo bem - diga isso',t:'ta'},
-    {k:'custo_assessora',l:'Quanto paga por mes para a assessora? E quantas horas ela trabalha?',p:'Valor em R$ e carga horaria',t:'input'}
-  ]},
-  {id:'ds', icon:'07', title:'Frustracoes e Desejos', sub:'O que realmente importa para voce', fields:[
-    {k:'tarefa_eliminar',l:'Se pudesse eliminar UMA tarefa da sua rotina para sempre, qual seria?',p:'Pense na que mais consome tempo ou energia',t:'ta'},
-    {k:'frustracao_sistema',l:'O que mais te frustra no sistema/processo da Prudential?',p:'Seja honesto - isso ajuda a construir algo melhor',t:'ta'},
-    {k:'assistente_perfeito',l:'Se voce tivesse um assistente perfeito 24h, o que pediria pra ele fazer?',p:'Liste tudo que vier a cabeca, sem filtro',t:'ta'},
-    {k:'lp_produtivo',l:'Conhece algum LifePlanner muito mais produtivo? O que ele faz de diferente?',p:'Processos, ferramentas, atitude...',t:'ta'},
-    {k:'willingness_to_pay',l:'Se existisse uma ferramenta que automatizasse seu backoffice, quanto pagaria por mes?',p:'Valor em R$ - seja sincero',t:'input'},
-    {k:'indicaria_ferramenta',l:'Indicaria essa ferramenta para outros LPs? Quantos conhece que teriam interesse?',p:'Numero aproximado de LPs na sua rede',t:'ta'}
-  ]},
-  {id:'nt', icon:'08', title:'Notas Finais', sub:'Algo mais que queira compartilhar', fields:[
-    {k:'notas_gerais',l:'Espaco livre - tem algo mais que gostaria de dizer ou que nao foi perguntado?',p:'Fique a vontade...',t:'ta'}
-  ]}
+const WHATSAPP_NUMBER = '';
+const steps = [
+  { bot: 'Oi! 👋 Tudo bem?' },
+  { bot: 'O Guizo me pediu pra te fazer algumas perguntas rápidas sobre como você trabalha hoje na agência.' },
+  { bot: 'São menos de 5 minutinhos. Pode ir na sua hora, sem pressa. 😊\n\nBora começar?', opts: ['Vamos!'], section: 'Início' },
+  { bot: '📊 Quantos clientes você atende por mês, em média?', opts: ['Até 5','Entre 5 e 15','Entre 15 e 30','Mais de 30'], key: 'Clientes por mês', section: 'Volume — 1/5' },
+  { bot: 'Desses, quantos costumam fechar de fato?', opts: ['Menos de 30%','Entre 30% e 60%','Mais de 60%'], key: 'Taxa de fechamento', section: 'Volume — 2/5' },
+  { bot: 'Quanto tempo você gasta pra montar um orçamento completo?', opts: ['Menos de 30 min','Entre 30 min e 1h','Entre 1h e 3h','Mais de 3h'], key: 'Tempo por orçamento', section: 'Volume — 3/5' },
+  { bot: 'Você trabalha mais com pacotes prontos ou monta roteiros personalizados?', opts: ['Quase sempre pacotes prontos','Metade a metade','Quase sempre personalizado'], key: 'Tipo de venda', section: 'Volume — 4/5' },
+  { bot: 'Quais operadoras você usa mais? (pode digitar mais de uma)', text: true, key: 'Operadoras principais', section: 'Volume — 5/5' },
+  { bot: '📱 Por onde os clientes mais te procuram?', opts: ['WhatsApp','Telefone','E-mail','Pessoalmente'], key: 'Canal de entrada', section: 'Processo — 1/4' },
+  { bot: 'Você usa algum sistema, ou é tudo no WhatsApp / papel / planilha?', opts: ['Tenho um sistema','Uso planilha','Tudo no WhatsApp','Papel e anotações'], key: 'Ferramentas atuais', section: 'Processo — 2/4' },
+  { bot: 'Como você controla vendas, pendências e pagamentos?', opts: ['Sistema específico','Planilha','WhatsApp / memória','Não tenho controle'], key: 'Controle financeiro', section: 'Processo — 3/4' },
+  { bot: 'Você tem o cadastro dos seus clientes organizado em algum lugar?', opts: ['Sim, bem organizado','Tenho mas está bagunçado','Não tenho'], key: 'Cadastro de clientes', section: 'Processo — 4/4' },
+  { bot: '💰 Você sabe exatamente o que cada operadora te deve hoje em comissões?', opts: ['Sim, controle claro','Mais ou menos','Não tenho controle'], key: 'Controle de comissões', section: 'Financeiro — 1/2' },
+  { bot: 'Já perdeu alguma comissão por falta de controle ou prazo?', opts: ['Sim, já aconteceu','Acho que sim, mas não sei quanto','Nunca perdi'], key: 'Perda de comissão', section: 'Financeiro — 2/2' },
+  { bot: '🌍 Depois que o cliente compra, você entra em contato antes da viagem?', opts: ['Sim, sempre','Às vezes','Raramente','Não costumo'], key: 'Pré-viagem', section: 'Pós-venda — 1/2' },
+  { bot: 'Depois que o cliente volta, você entra em contato pra saber como foi?', opts: ['Sim, sempre','Às vezes','Raramente','Nunca fiz isso'], key: 'Pós-viagem', section: 'Pós-venda — 2/2' },
+  { bot: '🎯 Última pergunta:\n\nO que mais te cansa ou toma tempo desnecessário no dia a dia?', text: true, key: 'Principal dor', section: 'Dores' },
+  { final: true }
 ];
-
-var step = 0;
-var total = blocks.length;
-var data = {};
-
-// === BUILD ALL PAGES ON LOAD ===
-function buildPages() {
-  var pages = document.getElementById('pages');
-  var html = '';
-
-  // Intro page
-  html += '<div class="page" id="page-0">';
-  html += '<div class="intro">';
-  html += '<div class="intro-icon">&#127919;</div>';
-  html += '<h1 class="intro-title">Copilot LP</h1>';
-  html += '<p class="intro-sub">Entrevista de Descoberta para LifePlanners</p>';
-  html += '<div class="intro-box"><p>';
-  html += 'Este formulario faz parte de um estudo para criar uma ferramenta que ajude LifePlanners a trabalhar melhor &mdash; menos burocracia, mais tempo com o cliente.';
-  html += '<br><br><strong>Duracao:</strong> 15-25 minutos';
-  html += '<br><strong>Blocos:</strong> 8 secoes tematicas';
-  html += '<br><br>Nao tem resposta certa ou errada. Quanto mais honesto voce for, melhor o que vamos construir.';
-  html += '</p></div>';
-  html += '<button class="btn-start" onclick="next()">Comecar &#8594;</button>';
-  html += '</div></div>';
-
-  // Question pages
-  for (var i = 1; i < blocks.length; i++) {
-    var b = blocks[i];
-    html += '<div class="page hidden" id="page-' + i + '">';
-    html += '<div class="blk-hdr">';
-    html += '<div class="blk-badge"><span>' + b.icon + '</span></div>';
-    html += '<h2 class="blk-title">' + b.title + '</h2>';
-    html += '<p class="blk-sub">' + b.sub + '</p>';
-    html += '</div>';
-
-    for (var j = 0; j < b.fields.length; j++) {
-      var f = b.fields[j];
-      html += '<div class="field">';
-      html += '<label>' + f.l;
-      if (f.rq) html += '<span class="req">*</span>';
-      html += '</label>';
-      if (f.t === 'ta') {
-        html += '<textarea id="f-' + f.k + '" placeholder="' + f.p + '" rows="3" oninput="saveField(\'' + f.k + '\',this)"></textarea>';
-      } else {
-        html += '<input type="text" id="f-' + f.k + '" placeholder="' + f.p + '" oninput="saveField(\'' + f.k + '\',this)">';
-      }
-      html += '</div>';
-    }
-    html += '</div>';
-  }
-
-  // Success page
-  html += '<div class="page hidden" id="page-success">';
-  html += '<div class="success">';
-  html += '<div class="success-icon">&#9989;</div>';
-  html += '<h1 class="success-title">Respostas enviadas!</h1>';
-  html += '<p class="success-text">Muito obrigado pela sua participacao. Suas respostas vao nos ajudar a construir algo que realmente faca diferenca no dia a dia dos LifePlanners.</p>';
-  html += '<div class="success-box"><p>Em breve entraremos em contato com os proximos passos. Pode fechar esta pagina.</p></div>';
-  html += '</div></div>';
-
-  pages.innerHTML = html;
-
-  // Auto-grow textareas
-  var tas = document.querySelectorAll('textarea');
-  for (var x = 0; x < tas.length; x++) {
-    tas[x].addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = this.scrollHeight + 'px';
-    });
-  }
+const TOTAL = steps.filter(s => s.key).length;
+let current = 0, answers = {}, answered = 0;
+const chat = document.getElementById('chat');
+const inputBar = document.getElementById('inputBar');
+const txtIn = document.getElementById('txtIn');
+const sendBtn = document.getElementById('sendBtn');
+const progFill = document.getElementById('progFill');
+const progText = document.getElementById('progText');
+const progPct = document.getElementById('progPct');
+const finalArea = document.getElementById('finalArea');
+function setProgress(section) {
+  const pct = Math.round((answered / TOTAL) * 100);
+  progFill.style.width = pct + '%';
+  progText.textContent = section || '';
+  progPct.textContent = pct + '%';
 }
-
-function saveField(key, el) {
-  data[key] = el.value;
+function addBot(text) {
+  const row = document.createElement('div'); row.className = 'msg-row bot';
+  const b = document.createElement('div'); b.className = 'bubble';
+  b.innerHTML = text.replace(/\n/g,'<br>');
+  row.appendChild(b); chat.appendChild(row);
+  requestAnimationFrame(() => requestAnimationFrame(() => { row.classList.add('show'); chat.scrollTop = chat.scrollHeight; }));
 }
-
-function showPage(n) {
-  var allPages = document.querySelectorAll('.page');
-  for (var i = 0; i < allPages.length; i++) {
-    allPages[i].classList.add('hidden');
-  }
-  var target = document.getElementById('page-' + n);
-  if (target) target.classList.remove('hidden');
-
-  // Update progress
-  var pct = (n / (total - 1)) * 100;
-  document.getElementById('progbar').style.width = pct + '%';
-
-  // Update counter
-  var cnt = document.getElementById('counter');
-  if (n > 0) {
-    var answered = 0;
-    var totalFields = 0;
-    for (var i = 1; i < blocks.length; i++) {
-      for (var j = 0; j < blocks[i].fields.length; j++) {
-        totalFields++;
-        var k = blocks[i].fields[j].k;
-        if (data[k] && data[k].trim()) answered++;
-      }
-    }
-    cnt.textContent = answered + '/' + totalFields + ' respondidas';
-  } else {
-    cnt.textContent = '';
-  }
-
-  // Show/hide nav
-  var nav = document.getElementById('navbar');
-  if (n === 0) {
-    nav.classList.add('hidden');
-  } else {
-    nav.classList.remove('hidden');
-    var btnNext = document.getElementById('btnNext');
-    if (n === total - 1) {
-      btnNext.textContent = '✓ Enviar Respostas';
-      btnNext.className = 'btn-send';
-      btnNext.onclick = submit;
-    } else {
-      btnNext.textContent = 'Proximo →';
-      btnNext.className = 'btn-next';
-      btnNext.onclick = next;
-    }
-  }
-
-  window.scrollTo(0, 0);
+function addUser(text) {
+  const row = document.createElement('div'); row.className = 'msg-row user';
+  const b = document.createElement('div'); b.className = 'bubble'; b.textContent = text;
+  row.appendChild(b); chat.appendChild(row);
+  requestAnimationFrame(() => requestAnimationFrame(() => { row.classList.add('show'); chat.scrollTop = chat.scrollHeight; }));
 }
-
-function next() {
-  if (step < total - 1) {
-    step++;
-    showPage(step);
-  }
-}
-
-function prev() {
-  if (step > 1) {
-    step--;
-    showPage(step);
-  }
-}
-
-function submit() {
-  var btn = document.getElementById('btnNext');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
-  var payload = {};
-  for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-      payload[key] = data[key];
-    }
-  }
-  payload.interview_date = new Date().toISOString().slice(0, 10);
-  if (!payload.interviewee_name) payload.interviewee_name = 'Anonimo';
-
-  fetch(SU_URL + '/rest/v1/interview_responses', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SU_KEY,
-      'Authorization': 'Bearer ' + SU_KEY,
-      'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(function(res) {
-    if (!res.ok) throw new Error('Erro');
-    // Show success
-    var allPages = document.querySelectorAll('.page');
-    for (var i = 0; i < allPages.length; i++) allPages[i].classList.add('hidden');
-    document.getElementById('page-success').classList.remove('hidden');
-    document.getElementById('navbar').classList.add('hidden');
-    document.getElementById('progbar').style.width = '100%';
-    document.getElementById('counter').textContent = 'Concluido!';
-  })
-  .catch(function() {
-    alert('Erro ao enviar. Verifique sua conexao e tente novamente.');
-    btn.disabled = false;
-    btn.textContent = '✓ Enviar Respostas';
+function showTyping(ms) {
+  return new Promise(res => {
+    const row = document.createElement('div'); row.className = 'typing-row';
+    row.innerHTML = '<div class="typing-bubble"><span></span><span></span><span></span></div>';
+    chat.appendChild(row); chat.scrollTop = chat.scrollHeight;
+    setTimeout(() => { row.remove(); res(); }, ms);
   });
 }
-
-// INIT
-buildPages();
-showPage(0);
+function showOpts(opts, key, section) {
+  const wrap = document.createElement('div'); wrap.className = 'opts'; chat.appendChild(wrap);
+  setTimeout(() => { wrap.classList.add('show'); chat.scrollTop = chat.scrollHeight; }, 80);
+  opts.forEach(opt => {
+    const btn = document.createElement('button'); btn.className = 'opt'; btn.textContent = opt;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.opt').forEach(b => { b.disabled = true; });
+      btn.classList.add('picked');
+      if (key) { answers[key] = opt; answered++; setProgress(section); }
+      setTimeout(() => { wrap.remove(); addUser(opt); setTimeout(() => { current++; runStep(); }, 500); }, 250);
+    };
+    wrap.appendChild(btn);
+  });
+}
+function enableText(key, section) {
+  txtIn.disabled = false; sendBtn.disabled = false; txtIn.value = ''; txtIn.focus();
+  const send = () => {
+    const val = txtIn.value.trim(); if (!val) return;
+    txtIn.disabled = true; sendBtn.disabled = true;
+    if (key) { answers[key] = val; answered++; setProgress(section); }
+    addUser(val); txtIn.value = '';
+    setTimeout(() => { current++; runStep(); }, 500);
+  };
+  sendBtn.onclick = send;
+  txtIn.onkeydown = e => { if (e.key === 'Enter') send(); };
+}
+async function runStep() {
+  if (current >= steps.length) return;
+  const step = steps[current];
+  txtIn.disabled = true; sendBtn.disabled = true;
+  if (step.final) { showFinal(); return; }
+  const delay = step.bot.length > 60 ? 900 : 700;
+  await showTyping(delay);
+  addBot(step.bot);
+  if (step.opts) setTimeout(() => showOpts(step.opts, step.key || null, step.section || ''), 300);
+  else if (step.text) setTimeout(() => enableText(step.key, step.section), 300);
+  else setTimeout(() => { current++; runStep(); }, 900);
+}
+function showFinal() {
+  chat.style.display = 'none'; inputBar.style.display = 'none';
+  document.getElementById('progWrap').style.display = 'none';
+  const summaryHTML = Object.entries(answers).map(([q,a]) => `<div class="summary-item"><div class="summary-q">${q}</div><div class="summary-a">${a}</div></div>`).join('');
+  const waText = encodeURIComponent('✈️ *Diagnóstico da Agência — Respostas*\n\n' + Object.entries(answers).map(([q,a]) => `*${q}:* ${a}`).join('\n'));
+  const waLink = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}` : `https://wa.me/?text=${waText}`;
+  finalArea.innerHTML = `
+    <div class="final-card">
+      <div class="final-icon">✅</div>
+      <h2>Tudo certo!</h2>
+      <p>Suas respostas foram registradas. Agora é só enviar pro Guizo pelo botão abaixo!</p>
+      <div class="summary-title">Resumo das suas respostas</div>
+      ${summaryHTML}
+    </div>
+    <button class="btn-wa" onclick="window.open('${waLink}','_blank')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar respostas pro Guizo
+    </button>
+    <button class="btn-copy" onclick="copyAnswers()">📋 Copiar respostas como texto</button>`;
+  finalArea.style.display = 'flex';
+}
+window.copyAnswers = function() {
+  const text = '✈️ Diagnóstico da Agência\n\n' + Object.entries(answers).map(([q,a]) => `• ${q}: ${a}`).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy'); btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar respostas como texto', 2000);
+  });
+};
+runStep();
 </script>
 </body>
 </html>
