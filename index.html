@@ -1,220 +1,458 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Diagnóstico — Agência de Viagens</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-:root {
-  --bg: #f0f4f8; --white: #ffffff; --bot-bg: #ffffff;
-  --user-bg: #1a56db; --user-text: #ffffff; --bot-text: #1e293b;
-  --muted: #94a3b8; --accent: #1a56db; --accent-light: #e8effd;
-  --green: #10b981; --border: #e2e8f0; --shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-.header { width: 100%; max-width: 480px; background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 18px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; box-shadow: var(--shadow); }
-.logo { width: 40px; height: 40px; background: linear-gradient(135deg, #1a56db, #3b82f6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.header-text h3 { font-size: 14px; font-weight: 700; color: #1e293b; }
-.header-text p { font-size: 11px; color: var(--muted); }
-.status { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--green); font-weight: 600; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-.prog-wrap { width: 100%; max-width: 480px; padding: 10px 18px 6px; background: var(--bg); }
-.prog-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
-.prog-fill { height: 100%; background: linear-gradient(90deg, #1a56db, #60a5fa); border-radius: 99px; transition: width .5s cubic-bezier(.4,0,.2,1); }
-.prog-label { font-size: 10px; color: var(--muted); margin-top: 4px; display: flex; justify-content: space-between; }
-.chat { width: 100%; max-width: 480px; flex: 1; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
-.msg-row { display: flex; opacity: 0; transform: translateY(10px); transition: all .35s ease; }
-.msg-row.show { opacity: 1; transform: translateY(0); }
-.msg-row.bot { justify-content: flex-start; }
-.msg-row.user { justify-content: flex-end; margin-bottom: 6px; }
-.bubble { max-width: 80%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.55; }
-.bot .bubble { background: var(--white); color: var(--bot-text); border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
-.user .bubble { background: var(--user-bg); color: var(--user-text); border-bottom-right-radius: 4px; }
-.typing-row { display: flex; margin-bottom: 4px; }
-.typing-bubble { background: var(--white); border-radius: 18px; border-bottom-left-radius: 4px; padding: 12px 16px; display: flex; gap: 5px; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
-.typing-bubble span { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
-.typing-bubble span:nth-child(2) { animation-delay: .2s; }
-.typing-bubble span:nth-child(3) { animation-delay: .4s; }
-@keyframes bounce { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-5px);opacity:1} }
-.opts { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 14px 12px; width: 100%; max-width: 480px; opacity: 0; transform: translateY(6px); transition: all .35s ease; }
-.opts.show { opacity: 1; transform: translateY(0); }
-.opt { background: var(--white); border: 1.5px solid var(--border); color: var(--accent); border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all .18s ease; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
-.opt:hover { background: var(--accent-light); border-color: var(--accent); }
-.opt.picked { background: var(--accent); border-color: var(--accent); color: #fff; }
-.opt:disabled { opacity: .5; cursor: default; }
-.input-bar { width: 100%; max-width: 480px; padding: 10px 14px 20px; background: var(--bg); display: flex; gap: 8px; align-items: center; position: sticky; bottom: 0; }
-.txt-in { flex: 1; background: var(--white); border: 1.5px solid var(--border); border-radius: 24px; padding: 11px 18px; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--bot-text); outline: none; transition: border .2s; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
-.txt-in:focus { border-color: var(--accent); }
-.txt-in::placeholder { color: var(--muted); }
-.txt-in:disabled { opacity: .5; }
-.send { width: 42px; height: 42px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .15s, opacity .15s; flex-shrink: 0; }
-.send:hover { transform: scale(1.08); }
-.send:disabled { opacity: .4; cursor: default; transform: none; }
-.send svg { fill: white; }
-.final { width: 100%; max-width: 480px; padding: 24px 18px 32px; display: none; flex-direction: column; gap: 0; animation: fadeUp .5s ease forwards; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.final-card { background: var(--white); border-radius: 20px; padding: 24px 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
-.final-icon { width: 56px; height: 56px; background: linear-gradient(135deg, #1a56db, #60a5fa); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 14px; }
-.final-card h2 { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
-.final-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
-.summary-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
-.summary-item { border-bottom: 1px solid var(--border); padding: 10px 0; }
-.summary-item:last-child { border-bottom: none; }
-.summary-q { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
-.summary-a { font-size: 14px; font-weight: 600; color: #1e293b; }
-.btn-wa { width: 100%; background: #25D366; border: none; border-radius: 14px; padding: 15px; color: white; font-size: 15px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 14px rgba(37,211,102,.3); margin-bottom: 10px; }
-.btn-wa:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,211,102,.4); }
-.btn-copy { width: 100%; background: transparent; border: 1.5px solid var(--border); border-radius: 14px; padding: 13px; color: var(--muted); font-size: 13px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all .18s; }
-.btn-copy:hover { border-color: var(--accent); color: var(--accent); }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EA Consult — Briefing Inicial</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 620px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .logo {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 32px;
+    }
+
+    .logo span {
+      color: #c8a97e;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #f5f5f5;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #888;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: #2a2a2a;
+      border-radius: 99px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #c8a97e;
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #c8a97e;
+      margin-bottom: 10px;
+    }
+
+    .step-question {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f5f5f5;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .step-hint {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    textarea, input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #f0f0f0;
+      font-size: 15px;
+      font-family: inherit;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    textarea { min-height: 120px; }
+
+    textarea:focus, input:focus {
+      border-color: #c8a97e;
+    }
+
+    .fields-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .fields-row { grid-template-columns: 1fr; }
+      .card { padding: 32px 24px; }
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .field-group { display: flex; flex-direction: column; }
+
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid #333;
+      color: #888;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover { border-color: #555; color: #ccc; }
+
+    .btn-next {
+      background: #c8a97e;
+      border: none;
+      color: #0f0f0f;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-next:hover { background: #d9bb94; }
+    .btn-next:disabled { background: #444; color: #666; cursor: not-allowed; }
+
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .success-screen h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f5f5f5;
+      margin-bottom: 12px;
+    }
+
+    .success-screen p {
+      font-size: 15px;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .error-msg {
+      color: #e07070;
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-<div class="header">
-  <div class="logo">✈️</div>
-  <div class="header-text"><h3>Diagnóstico da Agência</h3><p>Responde em menos de 5 minutos</p></div>
-  <div class="status"><div class="dot"></div> Ao vivo</div>
-</div>
-<div class="prog-wrap" id="progWrap">
-  <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-  <div class="prog-label"><span id="progText">Iniciando...</span><span id="progPct">0%</span></div>
-</div>
-<div class="chat" id="chat"></div>
-<div class="input-bar" id="inputBar">
-  <input class="txt-in" id="txtIn" placeholder="Digite aqui..." disabled />
-  <button class="send" id="sendBtn" disabled>
-    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-  </button>
-</div>
-<div class="final" id="finalArea"></div>
-<script>
-const WHATSAPP_NUMBER = '';
-const steps = [
-  { bot: 'Oi! 👋 Tudo bem?' },
-  { bot: 'O Guizo me pediu pra te fazer algumas perguntas rápidas sobre como você trabalha hoje na agência.' },
-  { bot: 'São menos de 5 minutinhos. Pode ir na sua hora, sem pressa. 😊\n\nBora começar?', opts: ['Vamos!'], section: 'Início' },
-  { bot: '📊 Quantos clientes você atende por mês, em média?', opts: ['Até 5','Entre 5 e 15','Entre 15 e 30','Mais de 30'], key: 'Clientes por mês', section: 'Volume — 1/5' },
-  { bot: 'Desses, quantos costumam fechar de fato?', opts: ['Menos de 30%','Entre 30% e 60%','Mais de 60%'], key: 'Taxa de fechamento', section: 'Volume — 2/5' },
-  { bot: 'Quanto tempo você gasta pra montar um orçamento completo?', opts: ['Menos de 30 min','Entre 30 min e 1h','Entre 1h e 3h','Mais de 3h'], key: 'Tempo por orçamento', section: 'Volume — 3/5' },
-  { bot: 'Você trabalha mais com pacotes prontos ou monta roteiros personalizados?', opts: ['Quase sempre pacotes prontos','Metade a metade','Quase sempre personalizado'], key: 'Tipo de venda', section: 'Volume — 4/5' },
-  { bot: 'Quais operadoras você usa mais? (pode digitar mais de uma)', text: true, key: 'Operadoras principais', section: 'Volume — 5/5' },
-  { bot: '📱 Por onde os clientes mais te procuram?', opts: ['WhatsApp','Telefone','E-mail','Pessoalmente'], key: 'Canal de entrada', section: 'Processo — 1/4' },
-  { bot: 'Você usa algum sistema, ou é tudo no WhatsApp / papel / planilha?', opts: ['Tenho um sistema','Uso planilha','Tudo no WhatsApp','Papel e anotações'], key: 'Ferramentas atuais', section: 'Processo — 2/4' },
-  { bot: 'Como você controla vendas, pendências e pagamentos?', opts: ['Sistema específico','Planilha','WhatsApp / memória','Não tenho controle'], key: 'Controle financeiro', section: 'Processo — 3/4' },
-  { bot: 'Você tem o cadastro dos seus clientes organizado em algum lugar?', opts: ['Sim, bem organizado','Tenho mas está bagunçado','Não tenho'], key: 'Cadastro de clientes', section: 'Processo — 4/4' },
-  { bot: '💰 Você sabe exatamente o que cada operadora te deve hoje em comissões?', opts: ['Sim, controle claro','Mais ou menos','Não tenho controle'], key: 'Controle de comissões', section: 'Financeiro — 1/2' },
-  { bot: 'Já perdeu alguma comissão por falta de controle ou prazo?', opts: ['Sim, já aconteceu','Acho que sim, mas não sei quanto','Nunca perdi'], key: 'Perda de comissão', section: 'Financeiro — 2/2' },
-  { bot: '🌍 Depois que o cliente compra, você entra em contato antes da viagem?', opts: ['Sim, sempre','Às vezes','Raramente','Não costumo'], key: 'Pré-viagem', section: 'Pós-venda — 1/2' },
-  { bot: 'Depois que o cliente volta, você entra em contato pra saber como foi?', opts: ['Sim, sempre','Às vezes','Raramente','Nunca fiz isso'], key: 'Pós-viagem', section: 'Pós-venda — 2/2' },
-  { bot: '🎯 Última pergunta:\n\nO que mais te cansa ou toma tempo desnecessário no dia a dia?', text: true, key: 'Principal dor', section: 'Dores' },
-  { final: true }
-];
-const TOTAL = steps.filter(s => s.key).length;
-let current = 0, answers = {}, answered = 0;
-const chat = document.getElementById('chat');
-const inputBar = document.getElementById('inputBar');
-const txtIn = document.getElementById('txtIn');
-const sendBtn = document.getElementById('sendBtn');
-const progFill = document.getElementById('progFill');
-const progText = document.getElementById('progText');
-const progPct = document.getElementById('progPct');
-const finalArea = document.getElementById('finalArea');
-function setProgress(section) {
-  const pct = Math.round((answered / TOTAL) * 100);
-  progFill.style.width = pct + '%';
-  progText.textContent = section || '';
-  progPct.textContent = pct + '%';
-}
-function addBot(text) {
-  const row = document.createElement('div'); row.className = 'msg-row bot';
-  const b = document.createElement('div'); b.className = 'bubble';
-  b.innerHTML = text.replace(/\n/g,'<br>');
-  row.appendChild(b); chat.appendChild(row);
-  requestAnimationFrame(() => requestAnimationFrame(() => { row.classList.add('show'); chat.scrollTop = chat.scrollHeight; }));
-}
-function addUser(text) {
-  const row = document.createElement('div'); row.className = 'msg-row user';
-  const b = document.createElement('div'); b.className = 'bubble'; b.textContent = text;
-  row.appendChild(b); chat.appendChild(row);
-  requestAnimationFrame(() => requestAnimationFrame(() => { row.classList.add('show'); chat.scrollTop = chat.scrollHeight; }));
-}
-function showTyping(ms) {
-  return new Promise(res => {
-    const row = document.createElement('div'); row.className = 'typing-row';
-    row.innerHTML = '<div class="typing-bubble"><span></span><span></span><span></span></div>';
-    chat.appendChild(row); chat.scrollTop = chat.scrollHeight;
-    setTimeout(() => { row.remove(); res(); }, ms);
-  });
-}
-function showOpts(opts, key, section) {
-  const wrap = document.createElement('div'); wrap.className = 'opts'; chat.appendChild(wrap);
-  setTimeout(() => { wrap.classList.add('show'); chat.scrollTop = chat.scrollHeight; }, 80);
-  opts.forEach(opt => {
-    const btn = document.createElement('button'); btn.className = 'opt'; btn.textContent = opt;
-    btn.onclick = () => {
-      wrap.querySelectorAll('.opt').forEach(b => { b.disabled = true; });
-      btn.classList.add('picked');
-      if (key) { answers[key] = opt; answered++; setProgress(section); }
-      setTimeout(() => { wrap.remove(); addUser(opt); setTimeout(() => { current++; runStep(); }, 500); }, 250);
-    };
-    wrap.appendChild(btn);
-  });
-}
-function enableText(key, section) {
-  txtIn.disabled = false; sendBtn.disabled = false; txtIn.value = ''; txtIn.focus();
-  const send = () => {
-    const val = txtIn.value.trim(); if (!val) return;
-    txtIn.disabled = true; sendBtn.disabled = true;
-    if (key) { answers[key] = val; answered++; setProgress(section); }
-    addUser(val); txtIn.value = '';
-    setTimeout(() => { current++; runStep(); }, 500);
-  };
-  sendBtn.onclick = send;
-  txtIn.onkeydown = e => { if (e.key === 'Enter') send(); };
-}
-async function runStep() {
-  if (current >= steps.length) return;
-  const step = steps[current];
-  txtIn.disabled = true; sendBtn.disabled = true;
-  if (step.final) { showFinal(); return; }
-  const delay = step.bot.length > 60 ? 900 : 700;
-  await showTyping(delay);
-  addBot(step.bot);
-  if (step.opts) setTimeout(() => showOpts(step.opts, step.key || null, step.section || ''), 300);
-  else if (step.text) setTimeout(() => enableText(step.key, step.section), 300);
-  else setTimeout(() => { current++; runStep(); }, 900);
-}
-function showFinal() {
-  chat.style.display = 'none'; inputBar.style.display = 'none';
-  document.getElementById('progWrap').style.display = 'none';
-  const summaryHTML = Object.entries(answers).map(([q,a]) => `<div class="summary-item"><div class="summary-q">${q}</div><div class="summary-a">${a}</div></div>`).join('');
-  const waText = encodeURIComponent('✈️ *Diagnóstico da Agência — Respostas*\n\n' + Object.entries(answers).map(([q,a]) => `*${q}:* ${a}`).join('\n'));
-  const waLink = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}` : `https://wa.me/?text=${waText}`;
-  finalArea.innerHTML = `
-    <div class="final-card">
-      <div class="final-icon">✅</div>
-      <h2>Tudo certo!</h2>
-      <p>Suas respostas foram registradas. Agora é só enviar pro Guizo pelo botão abaixo!</p>
-      <div class="summary-title">Resumo das suas respostas</div>
-      ${summaryHTML}
+<div class="card">
+
+  <div class="logo">EA <span>Consult</span></div>
+
+  <!-- FORMULÁRIO -->
+  <div id="form-container">
+    <h1>Vamos entender o seu dia a dia</h1>
+    <p class="subtitle">Sem compromisso. Responda no seu ritmo — cada resposta já nos ajuda a pensar em como podemos atuar no seu caso.</p>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress" style="width: 14%"></div>
     </div>
-    <button class="btn-wa" onclick="window.open('${waLink}','_blank')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Enviar respostas pro Guizo
-    </button>
-    <button class="btn-copy" onclick="copyAnswers()">📋 Copiar respostas como texto</button>`;
-  finalArea.style.display = 'flex';
-}
-window.copyAnswers = function() {
-  const text = '✈️ Diagnóstico da Agência\n\n' + Object.entries(answers).map(([q,a]) => `• ${q}: ${a}`).join('\n');
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector('.btn-copy'); btn.textContent = '✅ Copiado!';
-    setTimeout(() => btn.textContent = '📋 Copiar respostas como texto', 2000);
-  });
-};
-runStep();
+
+    <!-- STEP 1: Identificação -->
+    <div class="step active" id="step-1">
+      <div class="step-label">Passo 1 de 7</div>
+      <div class="step-question">Primeiro, como podemos te chamar?</div>
+      <div class="step-hint">Seus dados ficam somente com a gente.</div>
+      <div class="fields-row" style="margin-bottom:12px;">
+        <div class="field-group">
+          <div class="field-label">Nome *</div>
+          <input type="text" id="nome" placeholder="Seu nome" />
+        </div>
+        <div class="field-group">
+          <div class="field-label">WhatsApp</div>
+          <input type="tel" id="telefone" placeholder="(00) 00000-0000" />
+        </div>
+      </div>
+      <div class="fields-row">
+        <div class="field-group">
+          <div class="field-label">E-mail</div>
+          <input type="email" id="email" placeholder="seu@email.com" />
+        </div>
+        <div class="field-group">
+          <div class="field-label">Cargo / Profissão *</div>
+          <input type="text" id="cargo" placeholder="Ex: Médica do trabalho" />
+        </div>
+      </div>
+      <div style="margin-top:12px;" class="field-group">
+        <div class="field-label">Empresa / Local de atuação</div>
+        <input type="text" id="empresa" placeholder="Ex: Indústria XYZ" />
+      </div>
+      <div class="error-msg" id="err-1">Preencha pelo menos nome e cargo para continuar.</div>
+      <div class="btn-row">
+        <button class="btn-next" onclick="nextStep(1)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step-2">
+      <div class="step-label">Passo 2 de 7</div>
+      <div class="step-question">Quais tarefas você mais repete no trabalho?</div>
+      <div class="step-hint">Aquelas que você faz todo dia ou toda semana, quase no piloto automático.</div>
+      <textarea id="tarefas_repetitivas" placeholder="Ex: preencher laudos, registrar no sistema, responder as mesmas perguntas, fazer relatórios..."></textarea>
+      <div class="error-msg" id="err-2">Por favor, escreva algo antes de continuar.</div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="prevStep(2)">← Voltar</button>
+        <button class="btn-next" onclick="nextStep(2)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step-3">
+      <div class="step-label">Passo 3 de 7</div>
+      <div class="step-question">Dessas tarefas, qual consome mais tempo ou energia?</div>
+      <div class="step-hint">Pode ser uma só ou uma lista — seja como quiser.</div>
+      <textarea id="tarefa_mais_pesada" placeholder="Ex: montar o laudo de cada perícia do zero, mesmo quando são casos parecidos..."></textarea>
+      <div class="error-msg" id="err-3">Por favor, escreva algo antes de continuar.</div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="prevStep(3)">← Voltar</button>
+        <button class="btn-next" onclick="nextStep(3)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="step-4">
+      <div class="step-label">Passo 4 de 7</div>
+      <div class="step-question">Como é o volume do seu trabalho?</div>
+      <div class="step-hint">Quantas perícias, atendimentos ou laudos você faz por semana, em média? Esse número é estável ou varia muito? Tem épocas mais pesadas?</div>
+      <textarea id="volume_trabalho" placeholder="Ex: faço em média 15 perícias por semana, mas em alguns meses sobe para 25. Cada laudo leva cerca de 40 min..."></textarea>
+      <div class="error-msg" id="err-4">Por favor, escreva algo antes de continuar.</div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="prevStep(4)">← Voltar</button>
+        <button class="btn-next" onclick="nextStep(4)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="step-5">
+      <div class="step-label">Passo 5 de 7</div>
+      <div class="step-question">Que ferramentas você usa hoje para organizar seu trabalho?</div>
+      <div class="step-hint">Sistema da empresa, planilha, formulário, caderno, WhatsApp… qualquer coisa vale.</div>
+      <textarea id="ferramentas_usadas" placeholder="Ex: uso o sistema interno da empresa para registrar, mas boa parte fica no Word mesmo. Às vezes anoto no caderno..."></textarea>
+      <div class="error-msg" id="err-5">Por favor, escreva algo antes de continuar.</div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="prevStep(5)">← Voltar</button>
+        <button class="btn-next" onclick="nextStep(5)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step" id="step-6">
+      <div class="step-label">Passo 6 de 7</div>
+      <div class="step-question">"Se isso fosse automático, eu teria minha vida de volta."</div>
+      <div class="step-hint">O que é esse "isso" pra você?</div>
+      <textarea id="desejo_automatizar" placeholder="Ex: se eu não precisasse montar cada laudo do zero, se o sistema já preenchesse as partes repetitivas..."></textarea>
+      <div class="error-msg" id="err-6">Por favor, escreva algo antes de continuar.</div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="prevStep(6)">← Voltar</button>
+        <button class="btn-next" onclick="nextStep(6)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step" id="step-7">
+      <div class="step-label">Passo 7 de 7</div>
+      <div class="step-question">Fora o trabalho — quanto tempo livre você tem de verdade por dia?</div>
+      <div class="step-hint">Sem culpa na resposta 😄 Isso nos ajuda a entender o impacto real no seu dia.</div>
+      <textarea id="tempo_livre_dia" placeholder="Ex: se der sorte, umas 2h depois das 20h. Mas muita coisa acaba indo para o fim de semana..."></textarea>
+      <div class="error-msg" id="err-7">Por favor, escreva algo antes de continuar.</div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="prevStep(7)">← Voltar</button>
+        <button class="btn-next" id="btn-submit" onclick="submitForm()">Enviar respostas ✓</button>
+      </div>
+    </div>
+
+  </div><!-- /form-container -->
+
+  <!-- SUCESSO -->
+  <div class="success-screen" id="success">
+    <div class="success-icon">✅</div>
+    <h2>Recebemos tudo!</h2>
+    <p>Obrigado por responder, <span id="nome-confirmacao"></span>.<br><br>
+    Vamos analisar com atenção o que você compartilhou e em breve retornamos com um panorama do que é possível fazer no seu caso.<br><br>
+    <strong style="color:#c8a97e;">— Equipe EA Consult</strong></p>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://tgijwodbzdtcatqkxfxl.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnaWp3b2RiemR0Y2F0cWt4ZnhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNTk4NTksImV4cCI6MjA4ODkzNTg1OX0.uqfn2ieN36QXjesQAJAaPMxfiAludDO3nIs52JLHnO4';
+
+  let currentStep = 1;
+  const totalSteps = 7;
+
+  function updateProgress() {
+    const pct = Math.round((currentStep / totalSteps) * 100);
+    document.getElementById('progress').style.width = pct + '%';
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    currentStep = n;
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep(from) {
+    // Validações
+    if (from === 1) {
+      const nome = document.getElementById('nome').value.trim();
+      const cargo = document.getElementById('cargo').value.trim();
+      if (!nome || !cargo) {
+        document.getElementById('err-1').style.display = 'block';
+        return;
+      }
+      document.getElementById('err-1').style.display = 'none';
+    } else {
+      const fieldMap = { 2:'tarefas_repetitivas', 3:'tarefa_mais_pesada', 4:'volume_trabalho', 5:'ferramentas_usadas', 6:'desejo_automatizar', 7:'tempo_livre_dia' };
+      const val = document.getElementById(fieldMap[from]).value.trim();
+      if (!val) {
+        document.getElementById('err-' + from).style.display = 'block';
+        return;
+      }
+      document.getElementById('err-' + from).style.display = 'none';
+    }
+    if (from < totalSteps) showStep(from + 1);
+  }
+
+  function prevStep(from) {
+    if (from > 1) showStep(from - 1);
+  }
+
+  async function submitForm() {
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    // Validação final
+    const tempoLivre = document.getElementById('tempo_livre_dia').value.trim();
+    if (!tempoLivre) {
+      document.getElementById('err-7').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Enviar respostas ✓';
+      return;
+    }
+
+    const payload = {
+      nome: document.getElementById('nome').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      telefone: document.getElementById('telefone').value.trim(),
+      cargo_profissao: document.getElementById('cargo').value.trim(),
+      empresa: document.getElementById('empresa').value.trim(),
+      canal_origem: 'formulario_briefing',
+      tarefas_repetitivas: document.getElementById('tarefas_repetitivas').value.trim(),
+      tarefa_mais_pesada: document.getElementById('tarefa_mais_pesada').value.trim(),
+      volume_trabalho: document.getElementById('volume_trabalho').value.trim(),
+      ferramentas_usadas: document.getElementById('ferramentas_usadas').value.trim(),
+      desejo_automatizar: document.getElementById('desejo_automatizar').value.trim(),
+      tempo_livre_dia: document.getElementById('tempo_livre_dia').value.trim(),
+      responsavel: 'EA Consult',
+      status: 'novo'
+    };
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/briefing_comercial`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok || res.status === 201) {
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('nome-confirmacao').textContent = payload.nome.split(' ')[0];
+        document.getElementById('success').style.display = 'block';
+      } else {
+        const err = await res.text();
+        console.error('Erro Supabase:', err);
+        alert('Houve um erro ao enviar. Tente novamente ou entre em contato pelo WhatsApp.');
+        btn.disabled = false;
+        btn.textContent = 'Enviar respostas ✓';
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      btn.disabled = false;
+      btn.textContent = 'Enviar respostas ✓';
+    }
+  }
 </script>
 </body>
 </html>
