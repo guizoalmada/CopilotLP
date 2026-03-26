@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EA Consult — Briefing Inicial</title>
+  <title>EA Consult — Captura · Mapeamento Técnico · Filipe</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,7 +23,7 @@
       border: 1px solid #2a2a2a;
       border-radius: 16px;
       padding: 48px 40px;
-      max-width: 620px;
+      max-width: 680px;
       width: 100%;
       box-shadow: 0 24px 64px rgba(0,0,0,0.5);
     }
@@ -34,110 +34,222 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #888;
-      margin-bottom: 32px;
+      margin-bottom: 8px;
     }
+    .logo span { color: #c8a97e; }
 
-    .logo span {
-      color: #c8a97e;
+    .session-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 28px;
     }
 
     h1 {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 700;
-      line-height: 1.3;
       color: #f5f5f5;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .subtitle {
-      font-size: 15px;
-      color: #888;
-      line-height: 1.6;
-      margin-bottom: 40px;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 36px;
+      line-height: 1.5;
     }
 
+    /* Progress */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
     .progress-bar {
+      flex: 1;
       height: 3px;
       background: #2a2a2a;
       border-radius: 99px;
-      margin-bottom: 40px;
       overflow: hidden;
     }
-
     .progress-fill {
       height: 100%;
       background: #c8a97e;
       border-radius: 99px;
       transition: width 0.4s ease;
     }
+    .progress-label {
+      font-size: 12px;
+      color: #555;
+      white-space: nowrap;
+    }
 
+    /* Steps */
     .step { display: none; }
     .step.active { display: block; }
 
-    .step-label {
-      font-size: 12px;
-      font-weight: 600;
+    .step-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #c8a97e;
-      margin-bottom: 10px;
+      color: #0f0f0f;
+      background: #c8a97e;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-bottom: 14px;
     }
 
-    .step-question {
+    .step-title {
       font-size: 20px;
-      font-weight: 600;
+      font-weight: 700;
       color: #f5f5f5;
-      line-height: 1.4;
-      margin-bottom: 8px;
+      line-height: 1.3;
+      margin-bottom: 6px;
     }
 
-    .step-hint {
-      font-size: 14px;
-      color: #666;
+    .step-desc {
+      font-size: 13px;
+      color: #555;
       margin-bottom: 24px;
       line-height: 1.5;
     }
 
-    textarea, input[type="text"], input[type="email"], input[type="tel"] {
+    /* Alert box */
+    .alert-box {
+      background: #1f1510;
+      border: 1px solid #4a2e10;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #d4844a;
+      line-height: 1.5;
+    }
+    .alert-box strong { color: #e8a060; }
+
+    /* Info box */
+    .info-box {
+      background: #101820;
+      border: 1px solid #1a3040;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #5a9abf;
+      line-height: 1.5;
+    }
+
+    /* Field */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    textarea, input[type="text"] {
       width: 100%;
       background: #111;
-      border: 1px solid #333;
+      border: 1px solid #2a2a2a;
       border-radius: 10px;
       color: #f0f0f0;
-      font-size: 15px;
+      font-size: 14px;
       font-family: inherit;
-      padding: 14px 16px;
+      padding: 12px 14px;
       outline: none;
       transition: border-color 0.2s;
-      resize: none;
+      resize: vertical;
+    }
+    textarea { min-height: 90px; }
+    textarea:focus, input[type="text"]:focus { border-color: #c8a97e; }
+    textarea::placeholder, input::placeholder { color: #3a3a3a; }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
     }
 
-    textarea { min-height: 120px; }
-
-    textarea:focus, input:focus {
+    .radio-option {
+      position: relative;
+    }
+    .radio-option input { display: none; }
+    .radio-option label {
+      display: block;
+      padding: 8px 16px;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .radio-option input:checked + label {
+      background: #c8a97e;
       border-color: #c8a97e;
+      color: #0f0f0f;
+      font-weight: 600;
+    }
+    .radio-option label:hover { border-color: #555; color: #ccc; }
+
+    /* Checkbox group */
+    .check-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .check-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .check-option input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #c8a97e;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .check-option span {
+      font-size: 13px;
+      color: #aaa;
+    }
+    .check-option input:checked + span {
+      color: #f0f0f0;
     }
 
-    .fields-row {
+    /* Two cols */
+    .two-col {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
-    @media (max-width: 480px) {
-      .fields-row { grid-template-columns: 1fr; }
-      .card { padding: 32px 24px; }
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid #222;
+      margin: 20px 0;
     }
 
-    .field-label {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    .field-group { display: flex; flex-direction: column; }
-
+    /* Buttons */
     .btn-row {
       display: flex;
       justify-content: flex-end;
@@ -147,62 +259,44 @@
 
     .btn-back {
       background: transparent;
-      border: 1px solid #333;
-      color: #888;
-      padding: 12px 24px;
+      border: 1px solid #2a2a2a;
+      color: #666;
+      padding: 11px 22px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
     }
-
     .btn-back:hover { border-color: #555; color: #ccc; }
 
     .btn-next {
       background: #c8a97e;
       border: none;
       color: #0f0f0f;
-      padding: 12px 28px;
+      padding: 11px 26px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .btn-next:hover { background: #d9bb94; }
-    .btn-next:disabled { background: #444; color: #666; cursor: not-allowed; }
+    .btn-next:disabled { background: #333; color: #555; cursor: not-allowed; }
 
+    /* Success */
     .success-screen {
       display: none;
       text-align: center;
-      padding: 24px 0;
+      padding: 20px 0;
     }
+    .success-icon { font-size: 48px; margin-bottom: 20px; }
+    .success-screen h2 { font-size: 22px; font-weight: 700; color: #f5f5f5; margin-bottom: 10px; }
+    .success-screen p { font-size: 14px; color: #888; line-height: 1.6; }
 
-    .success-icon {
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
-
-    .success-screen h2 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #f5f5f5;
-      margin-bottom: 12px;
-    }
-
-    .success-screen p {
-      font-size: 15px;
-      color: #888;
-      line-height: 1.6;
-    }
-
-    .error-msg {
-      color: #e07070;
-      font-size: 13px;
-      margin-top: 8px;
-      display: none;
+    @media (max-width: 520px) {
+      .card { padding: 28px 20px; }
+      .two-col { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -210,126 +304,344 @@
 <div class="card">
 
   <div class="logo">EA <span>Consult</span></div>
+  <div class="session-tag">Uso interno · Mapeamento Técnico · Filipe Magalhães Silva · 27/03/2026</div>
 
-  <!-- FORMULÁRIO -->
   <div id="form-container">
-    <h1>Vamos entender o seu dia a dia</h1>
-    <p class="subtitle">Sem compromisso. Responda no seu ritmo — cada resposta já nos ajuda a pensar em como podemos atuar no seu caso.</p>
+    <h1>Captura da Sessão</h1>
+    <p class="subtitle">Preencha durante a reunião. Sem obrigatoriedade — registre o que for relevante.</p>
 
-    <div class="progress-bar">
-      <div class="progress-fill" id="progress" style="width: 14%"></div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress" style="width:14%"></div></div>
+      <div class="progress-label" id="progress-text">1 / 7</div>
     </div>
 
-    <!-- STEP 1: Identificação -->
+    <!-- ── BLOCO 1: Sistema Prudential ─────────────────────────── -->
     <div class="step active" id="step-1">
-      <div class="step-label">Passo 1 de 7</div>
-      <div class="step-question">Primeiro, como podemos te chamar?</div>
-      <div class="step-hint">Seus dados ficam somente com a gente.</div>
-      <div class="fields-row" style="margin-bottom:12px;">
-        <div class="field-group">
-          <div class="field-label">Nome *</div>
-          <input type="text" id="nome" placeholder="Seu nome" />
-        </div>
-        <div class="field-group">
-          <div class="field-label">WhatsApp</div>
-          <input type="tel" id="telefone" placeholder="(00) 00000-0000" />
-        </div>
-      </div>
-      <div class="fields-row">
-        <div class="field-group">
-          <div class="field-label">E-mail</div>
-          <input type="email" id="email" placeholder="seu@email.com" />
-        </div>
-        <div class="field-group">
-          <div class="field-label">Cargo / Profissão *</div>
-          <input type="text" id="cargo" placeholder="Ex: Médica do trabalho" />
+      <div class="step-badge">Bloco 1 · Sistema Prudential</div>
+      <div class="step-title">Como o Filipe usa o sistema da Prudential?</div>
+      <div class="step-desc">Fluxo de uso, frequência e pontos de atrito com o app.lifeplanner.com.br</div>
+
+      <div class="field-group">
+        <div class="field-label">Frequência de acesso ao sistema</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs1" value="multiplas_vezes_dia"><label for="fs1">Múltiplas vezes/dia</label></div>
+          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs2" value="uma_vez_dia"><label for="fs2">1x por dia</label></div>
+          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs3" value="algumas_vezes_semana"><label for="fs3">Algumas vezes/semana</label></div>
+          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs4" value="pontualment"><label for="fs4">Pontualmente</label></div>
         </div>
       </div>
-      <div style="margin-top:12px;" class="field-group">
-        <div class="field-label">Empresa / Local de atuação</div>
-        <input type="text" id="empresa" placeholder="Ex: Indústria XYZ" />
+
+      <div class="field-group">
+        <div class="field-label">Principais fluxos que usa no sistema</div>
+        <div class="check-group">
+          <label class="check-option"><input type="checkbox" id="fl_proposta"> <span>Simulação / criação de proposta</span></label>
+          <label class="check-option"><input type="checkbox" id="fl_carteira"> <span>Gestão de carteira / lista de clientes</span></label>
+          <label class="check-option"><input type="checkbox" id="fl_seguros"> <span>Acompanhamento de apólices / seguros</span></label>
+          <label class="check-option"><input type="checkbox" id="fl_agendamento"> <span>Agendamento / agenda</span></label>
+          <label class="check-option"><input type="checkbox" id="fl_relatorio"> <span>Relatórios / dashboards</span></label>
+          <label class="check-option"><input type="checkbox" id="fl_comunicacao"> <span>Comunicação interna / notificações</span></label>
+        </div>
       </div>
-      <div class="error-msg" id="err-1">Preencha pelo menos nome e cargo para continuar.</div>
+
+      <div class="field-group">
+        <div class="field-label">Maior atrito / o que mais incomoda no sistema</div>
+        <textarea id="atrito_sistema" placeholder="Ex: precisa navegar em muitas telas para fechar uma proposta, dados de clientes não aparecem juntos..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Tem acesso no celular também?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="acesso_mobile" id="am1" value="sim_app"><label for="am1">Sim — app</label></div>
+          <div class="radio-option"><input type="radio" name="acesso_mobile" id="am2" value="sim_browser"><label for="am2">Sim — browser</label></div>
+          <div class="radio-option"><input type="radio" name="acesso_mobile" id="am3" value="nao"><label for="am3">Não</label></div>
+        </div>
+      </div>
+
       <div class="btn-row">
-        <button class="btn-next" onclick="nextStep(1)">Próximo →</button>
+        <button class="btn-next" onclick="goTo(2)">Próximo →</button>
       </div>
     </div>
 
-    <!-- STEP 2 -->
+    <!-- ── BLOCO 2: Pós-venda e acompanhamento ─────────────────── -->
     <div class="step" id="step-2">
-      <div class="step-label">Passo 2 de 7</div>
-      <div class="step-question">Quais tarefas você mais repete no trabalho?</div>
-      <div class="step-hint">Aquelas que você faz todo dia ou toda semana, quase no piloto automático.</div>
-      <textarea id="tarefas_repetitivas" placeholder="Ex: preencher laudos, registrar no sistema, responder as mesmas perguntas, fazer relatórios..."></textarea>
-      <div class="error-msg" id="err-2">Por favor, escreva algo antes de continuar.</div>
+      <div class="step-badge">Bloco 2 · Pós-venda</div>
+      <div class="step-title">Como é o processo de pós-venda hoje?</div>
+      <div class="step-desc">Do fechamento da proposta até o acompanhamento recorrente do cliente</div>
+
+      <div class="field-group">
+        <div class="field-label">Onde registra o contato pós-venda</div>
+        <div class="check-group">
+          <label class="check-option"><input type="checkbox" id="pv_whatsapp"> <span>WhatsApp (manual)</span></label>
+          <label class="check-option"><input type="checkbox" id="pv_sistema"> <span>Sistema Prudential</span></label>
+          <label class="check-option"><input type="checkbox" id="pv_planilha"> <span>Planilha própria</span></label>
+          <label class="check-option"><input type="checkbox" id="pv_caderno"> <span>Caderno / anotação</span></label>
+          <label class="check-option"><input type="checkbox" id="pv_crm"> <span>CRM externo</span></label>
+          <label class="check-option"><input type="checkbox" id="pv_nao_registra"> <span>Não registra formalmente</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Com que frequência faz follow-up ativo com clientes?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="freq_followup" id="ff1" value="semanal"><label for="ff1">Semanal</label></div>
+          <div class="radio-option"><input type="radio" name="freq_followup" id="ff2" value="quinzenal"><label for="ff2">Quinzenal</label></div>
+          <div class="radio-option"><input type="radio" name="freq_followup" id="ff3" value="mensal"><label for="ff3">Mensal</label></div>
+          <div class="radio-option"><input type="radio" name="freq_followup" id="ff4" value="quando_lembro"><label for="ff4">Quando lembro</label></div>
+          <div class="radio-option"><input type="radio" name="freq_followup" id="ff5" value="nao_faz"><label for="ff5">Não faz</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Maior dor no processo de pós-venda / acompanhamento</div>
+        <textarea id="dor_posvenda" placeholder="Ex: esqueço de fazer follow-up, não sei quem vence quando, fica espalhado no WhatsApp..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Quantos clientes ativos hoje (estimativa)</div>
+        <input type="text" id="qtd_clientes" placeholder="Ex: ~700, sendo 400 ativos com contato frequente" />
+      </div>
+
       <div class="btn-row">
-        <button class="btn-back" onclick="prevStep(2)">← Voltar</button>
-        <button class="btn-next" onclick="nextStep(2)">Próximo →</button>
+        <button class="btn-back" onclick="goTo(1)">← Voltar</button>
+        <button class="btn-next" onclick="goTo(3)">Próximo →</button>
       </div>
     </div>
 
-    <!-- STEP 3 -->
+    <!-- ── BLOCO 3: Planilhas e dados ──────────────────────────── -->
     <div class="step" id="step-3">
-      <div class="step-label">Passo 3 de 7</div>
-      <div class="step-question">Dessas tarefas, qual consome mais tempo ou energia?</div>
-      <div class="step-hint">Pode ser uma só ou uma lista — seja como quiser.</div>
-      <textarea id="tarefa_mais_pesada" placeholder="Ex: montar o laudo de cada perícia do zero, mesmo quando são casos parecidos..."></textarea>
-      <div class="error-msg" id="err-3">Por favor, escreva algo antes de continuar.</div>
+      <div class="step-badge">Bloco 3 · Planilhas e dados</div>
+      <div class="step-title">Como organiza os dados dos clientes?</div>
+      <div class="step-desc">Estrutura das planilhas, onde ficam e o que controlam</div>
+
+      <div class="field-group">
+        <div class="field-label">Usa planilha própria?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="usa_planilha" id="up1" value="sim_excel"><label for="up1">Excel</label></div>
+          <div class="radio-option"><input type="radio" name="usa_planilha" id="up2" value="sim_sheets"><label for="up2">Google Sheets</label></div>
+          <div class="radio-option"><input type="radio" name="usa_planilha" id="up3" value="nao"><label for="up3">Não usa</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">O que controla na planilha</div>
+        <textarea id="conteudo_planilha" placeholder="Ex: nome do cliente, data de aniversário, produto contratado, data de renovação, valor da comissão..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Maior problema com os dados hoje</div>
+        <textarea id="problema_dados" placeholder="Ex: dados desatualizados, duplicados no sistema e na planilha, difícil de filtrar..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Já exportou dados do sistema Prudential alguma vez?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed1" value="sim_csv"><label for="ed1">Sim — CSV/Excel</label></div>
+          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed2" value="sim_pdf"><label for="ed2">Sim — PDF</label></div>
+          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed3" value="nao"><label for="ed3">Não</label></div>
+          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed4" value="nao_sabe"><label for="ed4">Não sabe se dá</label></div>
+        </div>
+      </div>
+
       <div class="btn-row">
-        <button class="btn-back" onclick="prevStep(3)">← Voltar</button>
-        <button class="btn-next" onclick="nextStep(3)">Próximo →</button>
+        <button class="btn-back" onclick="goTo(2)">← Voltar</button>
+        <button class="btn-next" onclick="goTo(4)">Próximo →</button>
       </div>
     </div>
 
-    <!-- STEP 4 -->
+    <!-- ── BLOCO 4: WhatsApp ───────────────────────────────────── -->
     <div class="step" id="step-4">
-      <div class="step-label">Passo 4 de 7</div>
-      <div class="step-question">Como é o volume do seu trabalho?</div>
-      <div class="step-hint">Quantas perícias, atendimentos ou laudos você faz por semana, em média? Esse número é estável ou varia muito? Tem épocas mais pesadas?</div>
-      <textarea id="volume_trabalho" placeholder="Ex: faço em média 15 perícias por semana, mas em alguns meses sobe para 25. Cada laudo leva cerca de 40 min..."></textarea>
-      <div class="error-msg" id="err-4">Por favor, escreva algo antes de continuar.</div>
+      <div class="step-badge">Bloco 4 · WhatsApp</div>
+      <div class="step-title">Como o WhatsApp entra na operação hoje?</div>
+      <div class="step-desc">Volume, tipo de mensagem e maior gargalo no canal</div>
+
+      <div class="field-group">
+        <div class="field-label">Volume médio de mensagens recebidas por dia</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw1" value="ate10"><label for="vw1">Até 10</label></div>
+          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw2" value="10a30"><label for="vw2">10 a 30</label></div>
+          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw3" value="30a60"><label for="vw3">30 a 60</label></div>
+          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw4" value="60mais"><label for="vw4">+60</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Tipos de mensagem mais recorrentes</div>
+        <div class="check-group">
+          <label class="check-option"><input type="checkbox" id="tp_duvidas"> <span>Dúvidas sobre apólices / coberturas</span></label>
+          <label class="check-option"><input type="checkbox" id="tp_renovacao"> <span>Renovação / vencimento</span></label>
+          <label class="check-option"><input type="checkbox" id="tp_sinistro"> <span>Sinistro / acionamento</span></label>
+          <label class="check-option"><input type="checkbox" id="tp_indicacao"> <span>Indicação de novo cliente</label></label>
+          <label class="check-option"><input type="checkbox" id="tp_proposta"> <span>Solicitação de proposta</span></label>
+          <label class="check-option"><input type="checkbox" id="tp_financeiro"> <span>Boleto / pagamento / financeiro</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Usa número pessoal ou número exclusivo do trabalho?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="num_wpp" id="nw1" value="pessoal"><label for="nw1">Pessoal</label></div>
+          <div class="radio-option"><input type="radio" name="num_wpp" id="nw2" value="exclusivo"><label for="nw2">Exclusivo trabalho</label></div>
+          <div class="radio-option"><input type="radio" name="num_wpp" id="nw3" value="dois"><label for="nw3">Dois números</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Maior dor no WhatsApp hoje</div>
+        <textarea id="dor_wpp" placeholder="Ex: responder as mesmas perguntas, demorar para achar informação, misturar pessoal e profissional..."></textarea>
+      </div>
+
       <div class="btn-row">
-        <button class="btn-back" onclick="prevStep(4)">← Voltar</button>
-        <button class="btn-next" onclick="nextStep(4)">Próximo →</button>
+        <button class="btn-back" onclick="goTo(3)">← Voltar</button>
+        <button class="btn-next" onclick="goTo(5)">Próximo →</button>
       </div>
     </div>
 
-    <!-- STEP 5 -->
+    <!-- ── BLOCO 5: Contrato Prudential ──────────────────────────── -->
     <div class="step" id="step-5">
-      <div class="step-label">Passo 5 de 7</div>
-      <div class="step-question">Que ferramentas você usa hoje para organizar seu trabalho?</div>
-      <div class="step-hint">Sistema da empresa, planilha, formulário, caderno, WhatsApp… qualquer coisa vale.</div>
-      <textarea id="ferramentas_usadas" placeholder="Ex: uso o sistema interno da empresa para registrar, mas boa parte fica no Word mesmo. Às vezes anoto no caderno..."></textarea>
-      <div class="error-msg" id="err-5">Por favor, escreva algo antes de continuar.</div>
+      <div class="step-badge">Bloco 5 · Contrato Prudential ⚠️</div>
+      <div class="step-title">Restrições contratuais — CRÍTICO</div>
+      <div class="step-desc">Definirá se o Cenário B (extensão Chrome) pode ser executado sem risco jurídico</div>
+
+      <div class="alert-box">
+        <strong>⚠️ Perguntar com cuidado.</strong> Não mencionar que queremos automatizar o sistema deles. Enquadrar como: "Você tem clareza das regras de uso do sistema da Prudential? Existe alguma política sobre ferramentas de terceiros?"
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Tem contrato de agência assinado com a Prudential?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="contrato_pru" id="cp1" value="sim"><label for="cp1">Sim</label></div>
+          <div class="radio-option"><input type="radio" name="contrato_pru" id="cp2" value="nao"><label for="cp2">Não</label></div>
+          <div class="radio-option"><input type="radio" name="contrato_pru" id="cp3" value="nao_sabe"><label for="cp3">Não sabe</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Mencionou alguma restrição de ferramentas / extensões no sistema?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="restricao_ext" id="re1" value="sim_mencionou"><label for="re1">Sim — mencionou restrição</label></div>
+          <div class="radio-option"><input type="radio" name="restricao_ext" id="re2" value="nao_mencionou"><label for="re2">Não mencionou</label></div>
+          <div class="radio-option"><input type="radio" name="restricao_ext" id="re3" value="nao_sabe"><label for="re3">Não sabe / nunca leu</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Detalhes / anotação livre</div>
+        <textarea id="obs_contrato" placeholder="Ex: disse que assinou um termo de uso padrão mas não lembra dos detalhes, vai verificar com o gerente de agência..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Encaminhamento definido</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec1" value="vai_verificar"><label for="ec1">Vai verificar com Prudential</label></div>
+          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec2" value="sem_restricao"><label for="ec2">Confirmou: sem restrição</label></div>
+          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec3" value="ha_restricao"><label for="ec3">Confirmou: há restrição</label></div>
+          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec4" value="pendente"><label for="ec4">Ficou em aberto</label></div>
+        </div>
+      </div>
+
       <div class="btn-row">
-        <button class="btn-back" onclick="prevStep(5)">← Voltar</button>
-        <button class="btn-next" onclick="nextStep(5)">Próximo →</button>
+        <button class="btn-back" onclick="goTo(4)">← Voltar</button>
+        <button class="btn-next" onclick="goTo(6)">Próximo →</button>
       </div>
     </div>
 
-    <!-- STEP 6 -->
+    <!-- ── BLOCO 6: LGPD ───────────────────────────────────────── -->
     <div class="step" id="step-6">
-      <div class="step-label">Passo 6 de 7</div>
-      <div class="step-question">"Se isso fosse automático, eu teria minha vida de volta."</div>
-      <div class="step-hint">O que é esse "isso" pra você?</div>
-      <textarea id="desejo_automatizar" placeholder="Ex: se eu não precisasse montar cada laudo do zero, se o sistema já preenchesse as partes repetitivas..."></textarea>
-      <div class="error-msg" id="err-6">Por favor, escreva algo antes de continuar.</div>
+      <div class="step-badge">Bloco 6 · LGPD ⚠️</div>
+      <div class="step-title">Dados, consentimento e segurança</div>
+      <div class="step-desc">Definirá a arquitetura de dados e o que precisa estar no contrato com a EA Consult</div>
+
+      <div class="alert-box">
+        <strong>⚠️ Enquadrar como benefício.</strong> "Para a gente operar com segurança jurídica dos dois lados, precisamos entender como os dados dos seus clientes são tratados hoje."
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Armazena dados sensíveis dos clientes fora do sistema Prudential?</div>
+        <div class="check-group">
+          <label class="check-option"><input type="checkbox" id="lg_planilha"> <span>Planilha local (Excel, Sheets)</span></label>
+          <label class="check-option"><input type="checkbox" id="lg_wpp"> <span>Histórico no WhatsApp</span></label>
+          <label class="check-option"><input type="checkbox" id="lg_email"> <span>E-mails / Drive</span></label>
+          <label class="check-option"><input type="checkbox" id="lg_crm"> <span>CRM de terceiros</span></label>
+          <label class="check-option"><input type="checkbox" id="lg_nuvem"> <span>Nuvem pessoal (iCloud, OneDrive)</span></label>
+          <label class="check-option"><input type="checkbox" id="lg_nao"> <span>Não armazena fora</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Conhecimento sobre LGPD</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl1" value="bem_informado"><label for="kl1">Bem informado</label></div>
+          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl2" value="basico"><label for="kl2">Básico</label></div>
+          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl3" value="pouco"><label for="kl3">Pouco</label></div>
+          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl4" value="nao"><label for="kl4">Não conhece</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Reação à proposta de DPA (acordo de proteção de dados com EA Consult)</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd1" value="tranquilo"><label for="rd1">Tranquilo / natural</label></div>
+          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd2" value="duvidas"><label for="rd2">Teve dúvidas</label></div>
+          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd3" value="resistencia"><label for="rd3">Resistência</label></div>
+          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd4" value="nao_abordado"><label for="rd4">Não abordado</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Observações LGPD / encaminhamentos</div>
+        <textarea id="obs_lgpd" placeholder="Ex: aceitou bem o DPA, pediu para revisar antes de assinar. Não sabia que precisava de consentimento explícito..."></textarea>
+      </div>
+
       <div class="btn-row">
-        <button class="btn-back" onclick="prevStep(6)">← Voltar</button>
-        <button class="btn-next" onclick="nextStep(6)">Próximo →</button>
+        <button class="btn-back" onclick="goTo(5)">← Voltar</button>
+        <button class="btn-next" onclick="goTo(7)">Próximo →</button>
       </div>
     </div>
 
-    <!-- STEP 7 -->
+    <!-- ── BLOCO 7: Resumo e próximos passos ───────────────────── -->
     <div class="step" id="step-7">
-      <div class="step-label">Passo 7 de 7</div>
-      <div class="step-question">Fora o trabalho — quanto tempo livre você tem de verdade por dia?</div>
-      <div class="step-hint">Sem culpa na resposta 😄 Isso nos ajuda a entender o impacto real no seu dia.</div>
-      <textarea id="tempo_livre_dia" placeholder="Ex: se der sorte, umas 2h depois das 20h. Mas muita coisa acaba indo para o fim de semana..."></textarea>
-      <div class="error-msg" id="err-7">Por favor, escreva algo antes de continuar.</div>
+      <div class="step-badge">Bloco 7 · Encerramento</div>
+      <div class="step-title">Resumo pós-sessão</div>
+      <div class="step-desc">Preencher logo após o Filipe ir embora</div>
+
+      <div class="field-group">
+        <div class="field-label">Cenário validado como viável</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv1" value="A"><label for="cv1">Cenário A — WhatsApp + n8n</label></div>
+          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv2" value="B"><label for="cv2">Cenário B — + Extensão Chrome</label></div>
+          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv3" value="ambos"><label for="cv3">Ambos</label></div>
+          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv4" value="indefinido"><label for="cv4">Indefinido — pendências</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Nível de interesse / energia do Filipe ao final</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="energia_final" id="ef1" value="muito_animado"><label for="ef1">Muito animado</label></div>
+          <div class="radio-option"><input type="radio" name="energia_final" id="ef2" value="positivo"><label for="ef2">Positivo</label></div>
+          <div class="radio-option"><input type="radio" name="energia_final" id="ef3" value="neutro"><label for="ef3">Neutro</label></div>
+          <div class="radio-option"><input type="radio" name="energia_final" id="ef4" value="hesitante"><label for="ef4">Hesitante</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Pendências que ele vai verificar antes da Sessão de Clareza</div>
+        <textarea id="pendencias_filipe" placeholder="Ex: verificar contrato com gerente Prudential, confirmar se é PF ou PJ, enviar planilha atual..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Insights não esperados / algo que surpreendeu</div>
+        <textarea id="insights_surpresa" placeholder="Ex: tem um número WhatsApp Business já ativo que não mencinou antes, usa um CRM próprio do corretor..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Próximo passo combinado e data</div>
+        <input type="text" id="proximo_passo" placeholder="Ex: Sessão de Clareza em 03/04 às 19h via Google Meet" />
+      </div>
+
       <div class="btn-row">
-        <button class="btn-back" onclick="prevStep(7)">← Voltar</button>
-        <button class="btn-next" id="btn-submit" onclick="submitForm()">Enviar respostas ✓</button>
+        <button class="btn-back" onclick="goTo(6)">← Voltar</button>
+        <button class="btn-next" id="btn-submit" onclick="submitForm()">Salvar captura ✓</button>
       </div>
     </div>
 
@@ -338,98 +650,111 @@
   <!-- SUCESSO -->
   <div class="success-screen" id="success">
     <div class="success-icon">✅</div>
-    <h2>Recebemos tudo!</h2>
-    <p>Obrigado por responder, <span id="nome-confirmacao"></span>.<br><br>
-    Vamos analisar com atenção o que você compartilhou e em breve retornamos com um panorama do que é possível fazer no seu caso.<br><br>
-    <strong style="color:#c8a97e;">— Equipe EA Consult</strong></p>
+    <h2>Captura salva!</h2>
+    <p>Dados do mapeamento de <strong style="color:#c8a97e;">Filipe Magalhães Silva</strong> registrados no Supabase.<br><br>
+    Use as informações para finalizar o Mapa de Inteligência e a Proposta Comercial.<br><br>
+    <strong style="color:#c8a97e;">— EA Consult · Uso interno</strong></p>
   </div>
 
-</div>
+</div><!-- /card -->
 
 <script>
-  const SUPABASE_URL = 'https://tgijwodbzdtcatqkxfxl.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnaWp3b2RiemR0Y2F0cWt4ZnhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNTk4NTksImV4cCI6MjA4ODkzNTg1OX0.uqfn2ieN36QXjesQAJAaPMxfiAludDO3nIs52JLHnO4';
+  const SUPABASE_URL = 'https://zvqwjtndvbqryonjplal.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_csV0eBiTNQnUNQuDBlWw0w_NoUYgEtv';
 
   let currentStep = 1;
   const totalSteps = 7;
 
-  function updateProgress() {
-    const pct = Math.round((currentStep / totalSteps) * 100);
-    document.getElementById('progress').style.width = pct + '%';
-  }
-
-  function showStep(n) {
+  function goTo(n) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step-' + n).classList.add('active');
     currentStep = n;
-    updateProgress();
+    const pct = Math.round((n / totalSteps) * 100);
+    document.getElementById('progress').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = n + ' / ' + totalSteps;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function nextStep(from) {
-    // Validações
-    if (from === 1) {
-      const nome = document.getElementById('nome').value.trim();
-      const cargo = document.getElementById('cargo').value.trim();
-      if (!nome || !cargo) {
-        document.getElementById('err-1').style.display = 'block';
-        return;
-      }
-      document.getElementById('err-1').style.display = 'none';
-    } else {
-      const fieldMap = { 2:'tarefas_repetitivas', 3:'tarefa_mais_pesada', 4:'volume_trabalho', 5:'ferramentas_usadas', 6:'desejo_automatizar', 7:'tempo_livre_dia' };
-      const val = document.getElementById(fieldMap[from]).value.trim();
-      if (!val) {
-        document.getElementById('err-' + from).style.display = 'block';
-        return;
-      }
-      document.getElementById('err-' + from).style.display = 'none';
-    }
-    if (from < totalSteps) showStep(from + 1);
+  function getChecked(ids) {
+    return ids.filter(id => {
+      const el = document.getElementById(id);
+      return el && el.checked;
+    }).map(id => document.getElementById(id).parentElement.querySelector('span').textContent.trim());
   }
 
-  function prevStep(from) {
-    if (from > 1) showStep(from - 1);
+  function getRadio(name) {
+    const el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : null;
   }
 
   async function submitForm() {
     const btn = document.getElementById('btn-submit');
     btn.disabled = true;
-    btn.textContent = 'Enviando...';
-
-    // Validação final
-    const tempoLivre = document.getElementById('tempo_livre_dia').value.trim();
-    if (!tempoLivre) {
-      document.getElementById('err-7').style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Enviar respostas ✓';
-      return;
-    }
+    btn.textContent = 'Salvando...';
 
     const payload = {
-      nome: document.getElementById('nome').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      telefone: document.getElementById('telefone').value.trim(),
-      cargo_profissao: document.getElementById('cargo').value.trim(),
-      empresa: document.getElementById('empresa').value.trim(),
-      canal_origem: 'formulario_briefing',
-      tarefas_repetitivas: document.getElementById('tarefas_repetitivas').value.trim(),
-      tarefa_mais_pesada: document.getElementById('tarefa_mais_pesada').value.trim(),
-      volume_trabalho: document.getElementById('volume_trabalho').value.trim(),
-      ferramentas_usadas: document.getElementById('ferramentas_usadas').value.trim(),
-      desejo_automatizar: document.getElementById('desejo_automatizar').value.trim(),
-      tempo_livre_dia: document.getElementById('tempo_livre_dia').value.trim(),
-      responsavel: 'EA Consult',
-      status: 'novo'
+      tipo: 'mapeamento_tecnico',
+      fase: 'sessao_presencial',
+      formato: 'formulario_interno',
+      coletado_por: 'Guilherme — EA Consult',
+      lido_por: 'formulario',
+      confianca_leitura: 1.0,
+      respostas: {
+        cliente: 'Filipe Magalhães Silva',
+        data_sessao: '2026-03-27',
+
+        // Bloco 1
+        freq_sistema: getRadio('freq_sistema'),
+        fluxos_sistema: getChecked(['fl_proposta','fl_carteira','fl_seguros','fl_agendamento','fl_relatorio','fl_comunicacao']),
+        atrito_sistema: document.getElementById('atrito_sistema').value.trim(),
+        acesso_mobile: getRadio('acesso_mobile'),
+
+        // Bloco 2
+        registro_posvenda: getChecked(['pv_whatsapp','pv_sistema','pv_planilha','pv_caderno','pv_crm','pv_nao_registra']),
+        freq_followup: getRadio('freq_followup'),
+        dor_posvenda: document.getElementById('dor_posvenda').value.trim(),
+        qtd_clientes: document.getElementById('qtd_clientes').value.trim(),
+
+        // Bloco 3
+        usa_planilha: getRadio('usa_planilha'),
+        conteudo_planilha: document.getElementById('conteudo_planilha').value.trim(),
+        problema_dados: document.getElementById('problema_dados').value.trim(),
+        exportou_dados: getRadio('exportou_dados'),
+
+        // Bloco 4
+        vol_wpp: getRadio('vol_wpp'),
+        tipos_mensagem_wpp: getChecked(['tp_duvidas','tp_renovacao','tp_sinistro','tp_indicacao','tp_proposta','tp_financeiro']),
+        num_wpp: getRadio('num_wpp'),
+        dor_wpp: document.getElementById('dor_wpp').value.trim(),
+
+        // Bloco 5
+        contrato_prudential: getRadio('contrato_pru'),
+        restricao_extensao: getRadio('restricao_ext'),
+        obs_contrato: document.getElementById('obs_contrato').value.trim(),
+        encaminhamento_contrato: getRadio('enc_contrato'),
+
+        // Bloco 6
+        dados_fora_sistema: getChecked(['lg_planilha','lg_wpp','lg_email','lg_crm','lg_nuvem','lg_nao']),
+        conhece_lgpd: getRadio('conhece_lgpd'),
+        reacao_dpa: getRadio('reacao_dpa'),
+        obs_lgpd: document.getElementById('obs_lgpd').value.trim(),
+
+        // Bloco 7
+        cenario_viavel: getRadio('cenario_viavel'),
+        energia_final: getRadio('energia_final'),
+        pendencias_filipe: document.getElementById('pendencias_filipe').value.trim(),
+        insights_surpresa: document.getElementById('insights_surpresa').value.trim(),
+        proximo_passo: document.getElementById('proximo_passo').value.trim()
+      }
     };
 
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/briefing_comercial`, {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/briefings?schema=core', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify(payload)
@@ -437,20 +762,19 @@
 
       if (res.ok || res.status === 201) {
         document.getElementById('form-container').style.display = 'none';
-        document.getElementById('nome-confirmacao').textContent = payload.nome.split(' ')[0];
         document.getElementById('success').style.display = 'block';
       } else {
         const err = await res.text();
-        console.error('Erro Supabase:', err);
-        alert('Houve um erro ao enviar. Tente novamente ou entre em contato pelo WhatsApp.');
+        console.error('Supabase error:', err);
+        alert('Erro ao salvar. Verifique a conexão e tente novamente.\n\n' + err);
         btn.disabled = false;
-        btn.textContent = 'Enviar respostas ✓';
+        btn.textContent = 'Salvar captura ✓';
       }
     } catch (e) {
       console.error(e);
-      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      alert('Erro de conexão. Verifique a internet e tente novamente.');
       btn.disabled = false;
-      btn.textContent = 'Enviar respostas ✓';
+      btn.textContent = 'Salvar captura ✓';
     }
   }
 </script>
