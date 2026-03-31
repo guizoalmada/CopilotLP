@@ -1,782 +1,1515 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EA Consult — Captura · Mapeamento Técnico · Filipe</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifePlanner Pro — EA Consult</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+/* ─── RESET & BASE ─── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1E3A6E;--blue2:#2E5090;--blue3:#4A7CC7;--blue-light:#EBF2FF;
+  --green:#1B7A4A;--green-light:#E6F4EE;
+  --red:#C0392B;--red-light:#FDECEA;
+  --orange:#D4700A;--orange-light:#FEF3E2;
+  --gray1:#F7F9FC;--gray2:#EEF2F8;--gray3:#D1D9E6;--gray4:#8FA3BF;--gray5:#4A5568;
+  --white:#FFFFFF;--text:#1A2340;
+  --shadow:0 2px 12px rgba(30,58,110,.10);
+  --radius:12px;--radius-sm:8px;
+  --font:'Inter',system-ui,sans-serif;
+}
+body{font-family:var(--font);background:var(--gray1);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:var(--font)}
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #0f0f0f;
-      color: #f0f0f0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-    }
+/* ─── TOPBAR ─── */
+#topbar{background:var(--blue);color:#fff;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+#topbar .logo{font-weight:700;font-size:17px;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+#topbar .logo span{background:var(--blue3);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:600;letter-spacing:.5px}
+#topbar .client-pill{background:rgba(255,255,255,.12);border-radius:20px;padding:5px 14px;font-size:13px;display:flex;align-items:center;gap:7px}
+#topbar .client-pill b{font-weight:600}
 
-    .card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
-      padding: 48px 40px;
-      max-width: 680px;
-      width: 100%;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-    }
+/* ─── STEPPER ─── */
+#stepper{background:var(--white);border-bottom:1px solid var(--gray3);padding:0 32px;display:flex;gap:0;overflow-x:auto}
+.step-btn{padding:14px 22px;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--gray4);border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px}
+.step-btn .num{width:22px;height:22px;border-radius:50%;background:var(--gray3);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.step-btn.active{color:var(--blue2);border-bottom-color:var(--blue2)}
+.step-btn.active .num{background:var(--blue2)}
+.step-btn.done{color:var(--green)}
+.step-btn.done .num{background:var(--green)}
+.step-btn:hover:not(.active){color:var(--gray5)}
 
-    .logo {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #888;
-      margin-bottom: 8px;
-    }
-    .logo span { color: #c8a97e; }
+/* ─── MAIN CONTENT ─── */
+#main{flex:1;padding:28px 32px;max-width:1280px;margin:0 auto;width:100%}
 
-    .session-tag {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #555;
-      margin-bottom: 28px;
-    }
+/* ─── CARDS ─── */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:20px}
+.card-title{font-size:15px;font-weight:700;color:var(--blue);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title .icon{font-size:18px}
 
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #f5f5f5;
-      margin-bottom: 6px;
-    }
+/* ─── GRID ─── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
 
-    .subtitle {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 36px;
-      line-height: 1.5;
-    }
+/* ─── KPI BOXES ─── */
+.kpi{background:var(--white);border-radius:var(--radius-sm);padding:16px 20px;border:1px solid var(--gray3);display:flex;flex-direction:column;gap:4px}
+.kpi .label{font-size:11px;font-weight:600;color:var(--gray4);text-transform:uppercase;letter-spacing:.6px}
+.kpi .value{font-size:22px;font-weight:700;color:var(--blue)}
+.kpi .sub{font-size:12px;color:var(--gray4)}
+.kpi.red .value{color:var(--red)}
+.kpi.green .value{color:var(--green)}
+.kpi.orange .value{color:var(--orange)}
 
-    /* Progress */
-    .progress-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 36px;
-    }
-    .progress-bar {
-      flex: 1;
-      height: 3px;
-      background: #2a2a2a;
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: #c8a97e;
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-    .progress-label {
-      font-size: 12px;
-      color: #555;
-      white-space: nowrap;
-    }
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:all .18s}
+.btn-primary{background:var(--blue2);color:#fff}
+.btn-primary:hover{background:var(--blue)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:#155c38}
+.btn-outline{background:transparent;color:var(--blue2);border:2px solid var(--blue2)}
+.btn-outline:hover{background:var(--blue-light)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-lg{padding:13px 28px;font-size:15px}
+.btn-danger{background:var(--red);color:#fff}
 
-    /* Steps */
-    .step { display: none; }
-    .step.active { display: block; }
+/* ─── INPUTS ─── */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.field label{font-size:12px;font-weight:600;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select{padding:10px 13px;border:1.5px solid var(--gray3);border-radius:8px;font-size:14px;color:var(--text);font-family:var(--font);background:#fff;transition:border .15s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--blue3)}
+.field .hint{font-size:11px;color:var(--gray4);margin-top:2px}
+.row-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
 
-    .step-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #0f0f0f;
-      background: #c8a97e;
-      padding: 3px 10px;
-      border-radius: 99px;
-      margin-bottom: 14px;
-    }
+/* ─── TABLES ─── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--blue);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.tbl th:first-child{border-radius:6px 0 0 0}
+.tbl th:last-child{border-radius:0 6px 0 0}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--gray2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--blue-light)}
+.tbl .total-row td{font-weight:700;background:var(--gray2);font-size:14px}
+.tbl .gap-neg{color:var(--red);font-weight:700}
+.tbl .gap-ok{color:var(--green);font-weight:700}
 
-    .step-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #f5f5f5;
-      line-height: 1.3;
-      margin-bottom: 6px;
-    }
+/* ─── TAGS ─── */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.tag-blue{background:var(--blue-light);color:var(--blue2)}
+.tag-green{background:var(--green-light);color:var(--green)}
+.tag-red{background:var(--red-light);color:var(--red)}
+.tag-orange{background:var(--orange-light);color:var(--orange)}
 
-    .step-desc {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+/* ─── UPLOAD ZONE ─── */
+#upload-zone{border:2.5px dashed var(--blue3);border-radius:var(--radius);padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--blue-light)}
+#upload-zone:hover,#upload-zone.drag{border-color:var(--blue);background:#ddeaff}
+#upload-zone .upload-icon{font-size:42px;margin-bottom:12px}
+#upload-zone h3{font-size:16px;color:var(--blue2);margin-bottom:6px}
+#upload-zone p{font-size:13px;color:var(--gray4)}
+#upload-zone input[type=file]{display:none}
 
-    /* Alert box */
-    .alert-box {
-      background: #1f1510;
-      border: 1px solid #4a2e10;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      color: #d4844a;
-      line-height: 1.5;
-    }
-    .alert-box strong { color: #e8a060; }
+/* ─── PROGRESS BAR ─── */
+.progress-bar{height:8px;background:var(--gray3);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width .4s}
+.fill-blue{background:var(--blue2)}
+.fill-red{background:var(--red)}
+.fill-green{background:var(--green)}
+.fill-orange{background:var(--orange)}
 
-    /* Info box */
-    .info-box {
-      background: #101820;
-      border: 1px solid #1a3040;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      color: #5a9abf;
-      line-height: 1.5;
-    }
+/* ─── INSIGHT CARDS ─── */
+.insight-card{border-radius:var(--radius-sm);padding:16px;margin-bottom:12px;border-left:4px solid;display:flex;gap:14px}
+.insight-card.urgente{background:var(--red-light);border-color:var(--red)}
+.insight-card.oportunidade{background:var(--orange-light);border-color:var(--orange)}
+.insight-card.positivo{background:var(--green-light);border-color:var(--green)}
+.insight-card.neutro{background:var(--blue-light);border-color:var(--blue3)}
+.insight-card .ic-icon{font-size:24px;flex-shrink:0;margin-top:2px}
+.insight-card .ic-body .ic-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.insight-card .ic-body .ic-text{font-size:13px;color:var(--gray5);line-height:1.5}
+.insight-card .ic-body .ic-script{margin-top:8px;padding:8px 12px;background:rgba(0,0,0,.05);border-radius:6px;font-size:12px;font-style:italic;color:var(--gray5)}
 
-    /* Field */
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 16px;
-    }
+/* ─── SLIDER ─── */
+.slider-wrap{display:flex;flex-direction:column;gap:8px}
+.slider-wrap input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--gray3);outline:none}
+.slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--blue2);cursor:pointer;box-shadow:0 2px 6px rgba(30,58,110,.3)}
+.slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--gray4)}
+.slider-value{font-size:28px;font-weight:700;color:var(--blue);text-align:center}
 
-    .field-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #888;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+/* ─── SCENARIO COMPARE ─── */
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.scenario-col{border-radius:var(--radius-sm);border:2px solid var(--gray3);padding:16px;transition:border .2s}
+.scenario-col.active{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(46,80,144,.12)}
+.scenario-col .sc-header{font-size:13px;font-weight:700;color:var(--gray5);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.scenario-col .sc-price{font-size:26px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.scenario-col .sc-anual{font-size:12px;color:var(--gray4);margin-bottom:12px}
+.scenario-col .sc-item{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--gray2);font-size:13px}
+.scenario-col .sc-item:last-child{border:none}
+.scenario-col .sc-item .si-label{color:var(--gray5)}
+.scenario-col .sc-item .si-val{font-weight:600}
 
-    textarea, input[type="text"] {
-      width: 100%;
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      color: #f0f0f0;
-      font-size: 14px;
-      font-family: inherit;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: vertical;
-    }
-    textarea { min-height: 90px; }
-    textarea:focus, input[type="text"]:focus { border-color: #c8a97e; }
-    textarea::placeholder, input::placeholder { color: #3a3a3a; }
+/* ─── CHART CONTAINERS ─── */
+.chart-wrap{position:relative;height:240px}
+.chart-wrap-sm{position:relative;height:180px}
 
-    /* Radio group */
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 2px;
-    }
+/* ─── TABS ─── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--gray3);margin-bottom:20px}
+.tab-btn{padding:10px 18px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gray4);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .18s}
+.tab-btn.active{color:var(--blue2);border-bottom-color:var(--blue2)}
+.tab-btn:hover:not(.active){color:var(--gray5)}
 
-    .radio-option {
-      position: relative;
-    }
-    .radio-option input { display: none; }
-    .radio-option label {
-      display: block;
-      padding: 8px 16px;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #888;
-      cursor: pointer;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .radio-option input:checked + label {
-      background: #c8a97e;
-      border-color: #c8a97e;
-      color: #0f0f0f;
-      font-weight: 600;
-    }
-    .radio-option label:hover { border-color: #555; color: #ccc; }
+/* ─── TOGGLE ─── */
+.toggle-wrap{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--gray5)}
+.toggle{position:relative;width:44px;height:24px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--gray3);border-radius:12px;cursor:pointer;transition:.3s}
+.toggle-slider:before{content:"";position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+input:checked+.toggle-slider{background:var(--blue2)}
+input:checked+.toggle-slider:before{transform:translateX(20px)}
 
-    /* Checkbox group */
-    .check-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .check-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .check-option input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #c8a97e;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .check-option span {
-      font-size: 13px;
-      color: #aaa;
-    }
-    .check-option input:checked + span {
-      color: #f0f0f0;
-    }
+/* ─── BADGE ─── */
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:11px;font-size:11px;font-weight:700;padding:0 6px}
+.badge-red{background:var(--red);color:#fff}
+.badge-blue{background:var(--blue2);color:#fff}
 
-    /* Two cols */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+/* ─── SECTION HEADERS ─── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.sec-title{font-size:20px;font-weight:700;color:var(--blue)}
+.sec-sub{font-size:13px;color:var(--gray4);margin-top:2px}
 
-    /* Divider */
-    .divider {
-      border: none;
-      border-top: 1px solid #222;
-      margin: 20px 0;
-    }
+/* ─── APÓLICE ITEM ─── */
+.apolice-item{border:1px solid var(--gray3);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:14px;transition:box-shadow .18s}
+.apolice-item:hover{box-shadow:var(--shadow)}
+.apolice-item .ai-icon{width:40px;height:40px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.apolice-item .ai-body{flex:1}
+.apolice-item .ai-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.apolice-item .ai-meta{font-size:12px;color:var(--gray4);display:flex;gap:12px;flex-wrap:wrap}
+.apolice-item .ai-values{text-align:right;flex-shrink:0}
+.apolice-item .ai-cs{font-size:15px;font-weight:700;color:var(--blue)}
+.apolice-item .ai-premio{font-size:12px;color:var(--gray4)}
 
-    /* Buttons */
-    .btn-row {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 28px;
-    }
+/* ─── HIDDEN ─── */
+.hidden{display:none!important}
 
-    .btn-back {
-      background: transparent;
-      border: 1px solid #2a2a2a;
-      color: #666;
-      padding: 11px 22px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-back:hover { border-color: #555; color: #ccc; }
+/* ─── EMPTY STATE ─── */
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray4)}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px}
+.empty-state h3{font-size:16px;font-weight:600;color:var(--gray5);margin-bottom:6px}
+.empty-state p{font-size:13px}
 
-    .btn-next {
-      background: #c8a97e;
-      border: none;
-      color: #0f0f0f;
-      padding: 11px 26px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-next:hover { background: #d9bb94; }
-    .btn-next:disabled { background: #333; color: #555; cursor: not-allowed; }
+/* ─── LOADING ─── */
+#loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner{width:44px;height:44px;border:4px solid var(--gray3);border-top-color:var(--blue2);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Success */
-    .success-screen {
-      display: none;
-      text-align: center;
-      padding: 20px 0;
-    }
-    .success-icon { font-size: 48px; margin-bottom: 20px; }
-    .success-screen h2 { font-size: 22px; font-weight: 700; color: #f5f5f5; margin-bottom: 10px; }
-    .success-screen p { font-size: 14px; color: #888; line-height: 1.6; }
+/* ─── TOOLTIP ─── */
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-size:11px;padding:5px 9px;border-radius:6px;white-space:nowrap;z-index:50;pointer-events:none}
 
-    @media (max-width: 520px) {
-      .card { padding: 28px 20px; }
-      .two-col { grid-template-columns: 1fr; }
-    }
-  </style>
+/* ─── PRINT ─── */
+@media print{#topbar,#stepper,.btn,#upload-zone{display:none}}
+</style>
 </head>
 <body>
-<div class="card">
 
-  <div class="logo">EA <span>Consult</span></div>
-  <div class="session-tag">Uso interno · Mapeamento Técnico · Filipe Magalhães Silva · 27/03/2026</div>
+<!-- LOADING -->
+<div id="loading-overlay" class="hidden">
+  <div class="spinner"></div>
+  <p id="loading-msg" style="font-size:14px;color:var(--gray5);font-weight:600">Processando PDF...</p>
+</div>
 
-  <div id="form-container">
-    <h1>Captura da Sessão</h1>
-    <p class="subtitle">Preencha durante a reunião. Sem obrigatoriedade — registre o que for relevante.</p>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo">
+    <span>LP PRO</span>
+    LifePlanner Pro <span style="opacity:.5;font-weight:400;font-size:13px">— EA Consult</span>
+  </div>
+  <div id="client-pill-wrap" class="client-pill hidden">
+    👤 <b id="topbar-client-name">—</b> &nbsp;|&nbsp; <span id="topbar-client-age">—</span>
+  </div>
+</div>
 
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="progress" style="width:14%"></div></div>
-      <div class="progress-label" id="progress-text">1 / 7</div>
+<!-- STEPPER -->
+<div id="stepper">
+  <button class="step-btn active" onclick="goStep(0)"><span class="num">1</span> Importar Apólices</button>
+  <button class="step-btn" onclick="goStep(1)"><span class="num">2</span> Diagnóstico</button>
+  <button class="step-btn" onclick="goStep(2)"><span class="num">3</span> Simular Planos</button>
+  <button class="step-btn" onclick="goStep(3)"><span class="num">4</span> Insights Reunião</button>
+  <button class="step-btn" onclick="goStep(4)"><span class="num">5</span> Apresentação</button>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ═══ TELA 0: IMPORTAR ═══ -->
+<div id="screen-0">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title">📂 Importar Apólices</div>
+      <div class="sec-sub">Faça upload do PDF da apólice Prudential ou insira os dados manualmente</div>
     </div>
-
-    <!-- ── BLOCO 1: Sistema Prudential ─────────────────────────── -->
-    <div class="step active" id="step-1">
-      <div class="step-badge">Bloco 1 · Sistema Prudential</div>
-      <div class="step-title">Como o Filipe usa o sistema da Prudential?</div>
-      <div class="step-desc">Fluxo de uso, frequência e pontos de atrito com o app.lifeplanner.com.br</div>
-
-      <div class="field-group">
-        <div class="field-label">Frequência de acesso ao sistema</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs1" value="multiplas_vezes_dia"><label for="fs1">Múltiplas vezes/dia</label></div>
-          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs2" value="uma_vez_dia"><label for="fs2">1x por dia</label></div>
-          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs3" value="algumas_vezes_semana"><label for="fs3">Algumas vezes/semana</label></div>
-          <div class="radio-option"><input type="radio" name="freq_sistema" id="fs4" value="pontualment"><label for="fs4">Pontualmente</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Principais fluxos que usa no sistema</div>
-        <div class="check-group">
-          <label class="check-option"><input type="checkbox" id="fl_proposta"> <span>Simulação / criação de proposta</span></label>
-          <label class="check-option"><input type="checkbox" id="fl_carteira"> <span>Gestão de carteira / lista de clientes</span></label>
-          <label class="check-option"><input type="checkbox" id="fl_seguros"> <span>Acompanhamento de apólices / seguros</span></label>
-          <label class="check-option"><input type="checkbox" id="fl_agendamento"> <span>Agendamento / agenda</span></label>
-          <label class="check-option"><input type="checkbox" id="fl_relatorio"> <span>Relatórios / dashboards</span></label>
-          <label class="check-option"><input type="checkbox" id="fl_comunicacao"> <span>Comunicação interna / notificações</span></label>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Maior atrito / o que mais incomoda no sistema</div>
-        <textarea id="atrito_sistema" placeholder="Ex: precisa navegar em muitas telas para fechar uma proposta, dados de clientes não aparecem juntos..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Tem acesso no celular também?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="acesso_mobile" id="am1" value="sim_app"><label for="am1">Sim — app</label></div>
-          <div class="radio-option"><input type="radio" name="acesso_mobile" id="am2" value="sim_browser"><label for="am2">Sim — browser</label></div>
-          <div class="radio-option"><input type="radio" name="acesso_mobile" id="am3" value="nao"><label for="am3">Não</label></div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-next" onclick="goTo(2)">Próximo →</button>
-      </div>
-    </div>
-
-    <!-- ── BLOCO 2: Pós-venda e acompanhamento ─────────────────── -->
-    <div class="step" id="step-2">
-      <div class="step-badge">Bloco 2 · Pós-venda</div>
-      <div class="step-title">Como é o processo de pós-venda hoje?</div>
-      <div class="step-desc">Do fechamento da proposta até o acompanhamento recorrente do cliente</div>
-
-      <div class="field-group">
-        <div class="field-label">Onde registra o contato pós-venda</div>
-        <div class="check-group">
-          <label class="check-option"><input type="checkbox" id="pv_whatsapp"> <span>WhatsApp (manual)</span></label>
-          <label class="check-option"><input type="checkbox" id="pv_sistema"> <span>Sistema Prudential</span></label>
-          <label class="check-option"><input type="checkbox" id="pv_planilha"> <span>Planilha própria</span></label>
-          <label class="check-option"><input type="checkbox" id="pv_caderno"> <span>Caderno / anotação</span></label>
-          <label class="check-option"><input type="checkbox" id="pv_crm"> <span>CRM externo</span></label>
-          <label class="check-option"><input type="checkbox" id="pv_nao_registra"> <span>Não registra formalmente</span></label>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Com que frequência faz follow-up ativo com clientes?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="freq_followup" id="ff1" value="semanal"><label for="ff1">Semanal</label></div>
-          <div class="radio-option"><input type="radio" name="freq_followup" id="ff2" value="quinzenal"><label for="ff2">Quinzenal</label></div>
-          <div class="radio-option"><input type="radio" name="freq_followup" id="ff3" value="mensal"><label for="ff3">Mensal</label></div>
-          <div class="radio-option"><input type="radio" name="freq_followup" id="ff4" value="quando_lembro"><label for="ff4">Quando lembro</label></div>
-          <div class="radio-option"><input type="radio" name="freq_followup" id="ff5" value="nao_faz"><label for="ff5">Não faz</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Maior dor no processo de pós-venda / acompanhamento</div>
-        <textarea id="dor_posvenda" placeholder="Ex: esqueço de fazer follow-up, não sei quem vence quando, fica espalhado no WhatsApp..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Quantos clientes ativos hoje (estimativa)</div>
-        <input type="text" id="qtd_clientes" placeholder="Ex: ~700, sendo 400 ativos com contato frequente" />
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goTo(1)">← Voltar</button>
-        <button class="btn-next" onclick="goTo(3)">Próximo →</button>
-      </div>
-    </div>
-
-    <!-- ── BLOCO 3: Planilhas e dados ──────────────────────────── -->
-    <div class="step" id="step-3">
-      <div class="step-badge">Bloco 3 · Planilhas e dados</div>
-      <div class="step-title">Como organiza os dados dos clientes?</div>
-      <div class="step-desc">Estrutura das planilhas, onde ficam e o que controlam</div>
-
-      <div class="field-group">
-        <div class="field-label">Usa planilha própria?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="usa_planilha" id="up1" value="sim_excel"><label for="up1">Excel</label></div>
-          <div class="radio-option"><input type="radio" name="usa_planilha" id="up2" value="sim_sheets"><label for="up2">Google Sheets</label></div>
-          <div class="radio-option"><input type="radio" name="usa_planilha" id="up3" value="nao"><label for="up3">Não usa</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">O que controla na planilha</div>
-        <textarea id="conteudo_planilha" placeholder="Ex: nome do cliente, data de aniversário, produto contratado, data de renovação, valor da comissão..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Maior problema com os dados hoje</div>
-        <textarea id="problema_dados" placeholder="Ex: dados desatualizados, duplicados no sistema e na planilha, difícil de filtrar..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Já exportou dados do sistema Prudential alguma vez?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed1" value="sim_csv"><label for="ed1">Sim — CSV/Excel</label></div>
-          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed2" value="sim_pdf"><label for="ed2">Sim — PDF</label></div>
-          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed3" value="nao"><label for="ed3">Não</label></div>
-          <div class="radio-option"><input type="radio" name="exportou_dados" id="ed4" value="nao_sabe"><label for="ed4">Não sabe se dá</label></div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goTo(2)">← Voltar</button>
-        <button class="btn-next" onclick="goTo(4)">Próximo →</button>
-      </div>
-    </div>
-
-    <!-- ── BLOCO 4: WhatsApp ───────────────────────────────────── -->
-    <div class="step" id="step-4">
-      <div class="step-badge">Bloco 4 · WhatsApp</div>
-      <div class="step-title">Como o WhatsApp entra na operação hoje?</div>
-      <div class="step-desc">Volume, tipo de mensagem e maior gargalo no canal</div>
-
-      <div class="field-group">
-        <div class="field-label">Volume médio de mensagens recebidas por dia</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw1" value="ate10"><label for="vw1">Até 10</label></div>
-          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw2" value="10a30"><label for="vw2">10 a 30</label></div>
-          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw3" value="30a60"><label for="vw3">30 a 60</label></div>
-          <div class="radio-option"><input type="radio" name="vol_wpp" id="vw4" value="60mais"><label for="vw4">+60</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Tipos de mensagem mais recorrentes</div>
-        <div class="check-group">
-          <label class="check-option"><input type="checkbox" id="tp_duvidas"> <span>Dúvidas sobre apólices / coberturas</span></label>
-          <label class="check-option"><input type="checkbox" id="tp_renovacao"> <span>Renovação / vencimento</span></label>
-          <label class="check-option"><input type="checkbox" id="tp_sinistro"> <span>Sinistro / acionamento</span></label>
-          <label class="check-option"><input type="checkbox" id="tp_indicacao"> <span>Indicação de novo cliente</label></label>
-          <label class="check-option"><input type="checkbox" id="tp_proposta"> <span>Solicitação de proposta</span></label>
-          <label class="check-option"><input type="checkbox" id="tp_financeiro"> <span>Boleto / pagamento / financeiro</span></label>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Usa número pessoal ou número exclusivo do trabalho?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="num_wpp" id="nw1" value="pessoal"><label for="nw1">Pessoal</label></div>
-          <div class="radio-option"><input type="radio" name="num_wpp" id="nw2" value="exclusivo"><label for="nw2">Exclusivo trabalho</label></div>
-          <div class="radio-option"><input type="radio" name="num_wpp" id="nw3" value="dois"><label for="nw3">Dois números</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Maior dor no WhatsApp hoje</div>
-        <textarea id="dor_wpp" placeholder="Ex: responder as mesmas perguntas, demorar para achar informação, misturar pessoal e profissional..."></textarea>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goTo(3)">← Voltar</button>
-        <button class="btn-next" onclick="goTo(5)">Próximo →</button>
-      </div>
-    </div>
-
-    <!-- ── BLOCO 5: Contrato Prudential ──────────────────────────── -->
-    <div class="step" id="step-5">
-      <div class="step-badge">Bloco 5 · Contrato Prudential ⚠️</div>
-      <div class="step-title">Restrições contratuais — CRÍTICO</div>
-      <div class="step-desc">Definirá se o Cenário B (extensão Chrome) pode ser executado sem risco jurídico</div>
-
-      <div class="alert-box">
-        <strong>⚠️ Perguntar com cuidado.</strong> Não mencionar que queremos automatizar o sistema deles. Enquadrar como: "Você tem clareza das regras de uso do sistema da Prudential? Existe alguma política sobre ferramentas de terceiros?"
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Tem contrato de agência assinado com a Prudential?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="contrato_pru" id="cp1" value="sim"><label for="cp1">Sim</label></div>
-          <div class="radio-option"><input type="radio" name="contrato_pru" id="cp2" value="nao"><label for="cp2">Não</label></div>
-          <div class="radio-option"><input type="radio" name="contrato_pru" id="cp3" value="nao_sabe"><label for="cp3">Não sabe</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Mencionou alguma restrição de ferramentas / extensões no sistema?</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="restricao_ext" id="re1" value="sim_mencionou"><label for="re1">Sim — mencionou restrição</label></div>
-          <div class="radio-option"><input type="radio" name="restricao_ext" id="re2" value="nao_mencionou"><label for="re2">Não mencionou</label></div>
-          <div class="radio-option"><input type="radio" name="restricao_ext" id="re3" value="nao_sabe"><label for="re3">Não sabe / nunca leu</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Detalhes / anotação livre</div>
-        <textarea id="obs_contrato" placeholder="Ex: disse que assinou um termo de uso padrão mas não lembra dos detalhes, vai verificar com o gerente de agência..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Encaminhamento definido</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec1" value="vai_verificar"><label for="ec1">Vai verificar com Prudential</label></div>
-          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec2" value="sem_restricao"><label for="ec2">Confirmou: sem restrição</label></div>
-          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec3" value="ha_restricao"><label for="ec3">Confirmou: há restrição</label></div>
-          <div class="radio-option"><input type="radio" name="enc_contrato" id="ec4" value="pendente"><label for="ec4">Ficou em aberto</label></div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goTo(4)">← Voltar</button>
-        <button class="btn-next" onclick="goTo(6)">Próximo →</button>
-      </div>
-    </div>
-
-    <!-- ── BLOCO 6: LGPD ───────────────────────────────────────── -->
-    <div class="step" id="step-6">
-      <div class="step-badge">Bloco 6 · LGPD ⚠️</div>
-      <div class="step-title">Dados, consentimento e segurança</div>
-      <div class="step-desc">Definirá a arquitetura de dados e o que precisa estar no contrato com a EA Consult</div>
-
-      <div class="alert-box">
-        <strong>⚠️ Enquadrar como benefício.</strong> "Para a gente operar com segurança jurídica dos dois lados, precisamos entender como os dados dos seus clientes são tratados hoje."
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Armazena dados sensíveis dos clientes fora do sistema Prudential?</div>
-        <div class="check-group">
-          <label class="check-option"><input type="checkbox" id="lg_planilha"> <span>Planilha local (Excel, Sheets)</span></label>
-          <label class="check-option"><input type="checkbox" id="lg_wpp"> <span>Histórico no WhatsApp</span></label>
-          <label class="check-option"><input type="checkbox" id="lg_email"> <span>E-mails / Drive</span></label>
-          <label class="check-option"><input type="checkbox" id="lg_crm"> <span>CRM de terceiros</span></label>
-          <label class="check-option"><input type="checkbox" id="lg_nuvem"> <span>Nuvem pessoal (iCloud, OneDrive)</span></label>
-          <label class="check-option"><input type="checkbox" id="lg_nao"> <span>Não armazena fora</span></label>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Conhecimento sobre LGPD</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl1" value="bem_informado"><label for="kl1">Bem informado</label></div>
-          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl2" value="basico"><label for="kl2">Básico</label></div>
-          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl3" value="pouco"><label for="kl3">Pouco</label></div>
-          <div class="radio-option"><input type="radio" name="conhece_lgpd" id="kl4" value="nao"><label for="kl4">Não conhece</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Reação à proposta de DPA (acordo de proteção de dados com EA Consult)</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd1" value="tranquilo"><label for="rd1">Tranquilo / natural</label></div>
-          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd2" value="duvidas"><label for="rd2">Teve dúvidas</label></div>
-          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd3" value="resistencia"><label for="rd3">Resistência</label></div>
-          <div class="radio-option"><input type="radio" name="reacao_dpa" id="rd4" value="nao_abordado"><label for="rd4">Não abordado</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Observações LGPD / encaminhamentos</div>
-        <textarea id="obs_lgpd" placeholder="Ex: aceitou bem o DPA, pediu para revisar antes de assinar. Não sabia que precisava de consentimento explícito..."></textarea>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goTo(5)">← Voltar</button>
-        <button class="btn-next" onclick="goTo(7)">Próximo →</button>
-      </div>
-    </div>
-
-    <!-- ── BLOCO 7: Resumo e próximos passos ───────────────────── -->
-    <div class="step" id="step-7">
-      <div class="step-badge">Bloco 7 · Encerramento</div>
-      <div class="step-title">Resumo pós-sessão</div>
-      <div class="step-desc">Preencher logo após o Filipe ir embora</div>
-
-      <div class="field-group">
-        <div class="field-label">Cenário validado como viável</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv1" value="A"><label for="cv1">Cenário A — WhatsApp + n8n</label></div>
-          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv2" value="B"><label for="cv2">Cenário B — + Extensão Chrome</label></div>
-          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv3" value="ambos"><label for="cv3">Ambos</label></div>
-          <div class="radio-option"><input type="radio" name="cenario_viavel" id="cv4" value="indefinido"><label for="cv4">Indefinido — pendências</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Nível de interesse / energia do Filipe ao final</div>
-        <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="energia_final" id="ef1" value="muito_animado"><label for="ef1">Muito animado</label></div>
-          <div class="radio-option"><input type="radio" name="energia_final" id="ef2" value="positivo"><label for="ef2">Positivo</label></div>
-          <div class="radio-option"><input type="radio" name="energia_final" id="ef3" value="neutro"><label for="ef3">Neutro</label></div>
-          <div class="radio-option"><input type="radio" name="energia_final" id="ef4" value="hesitante"><label for="ef4">Hesitante</label></div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Pendências que ele vai verificar antes da Sessão de Clareza</div>
-        <textarea id="pendencias_filipe" placeholder="Ex: verificar contrato com gerente Prudential, confirmar se é PF ou PJ, enviar planilha atual..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Insights não esperados / algo que surpreendeu</div>
-        <textarea id="insights_surpresa" placeholder="Ex: tem um número WhatsApp Business já ativo que não mencinou antes, usa um CRM próprio do corretor..."></textarea>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">Próximo passo combinado e data</div>
-        <input type="text" id="proximo_passo" placeholder="Ex: Sessão de Clareza em 03/04 às 19h via Google Meet" />
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goTo(6)">← Voltar</button>
-        <button class="btn-next" id="btn-submit" onclick="submitForm()">Salvar captura ✓</button>
-      </div>
-    </div>
-
-  </div><!-- /form-container -->
-
-  <!-- SUCESSO -->
-  <div class="success-screen" id="success">
-    <div class="success-icon">✅</div>
-    <h2>Captura salva!</h2>
-    <p>Dados do mapeamento de <strong style="color:#c8a97e;">Filipe Magalhães Silva</strong> registrados no Supabase.<br><br>
-    Use as informações para finalizar o Mapa de Inteligência e a Proposta Comercial.<br><br>
-    <strong style="color:#c8a97e;">— EA Consult · Uso interno</strong></p>
+    <button class="btn btn-outline btn-sm" onclick="loadDemo()">🎯 Carregar demo</button>
   </div>
 
-</div><!-- /card -->
+  <div class="grid-2">
+    <div>
+      <div id="upload-zone" onclick="document.getElementById('pdf-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <input type="file" id="pdf-input" accept=".pdf" onchange="handlePdfUpload(event)">
+        <div class="upload-icon">📄</div>
+        <h3>Arraste o PDF da apólice aqui</h3>
+        <p>ou clique para selecionar o arquivo</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--blue3)">Suporte: Prudential, MetLife, SulAmérica</p>
+      </div>
+      <div id="pdf-status" class="hidden" style="margin-top:12px;padding:12px 16px;background:var(--green-light);border-radius:8px;color:var(--green);font-size:13px;font-weight:600"></div>
+    </div>
+
+    <div class="card" style="margin:0">
+      <div class="card-title"><span class="icon">👤</span> Dados do Cliente</div>
+      <div class="row-fields">
+        <div class="field"><label>Nome completo</label><input type="text" id="cli-nome" placeholder="Ex: João Silva" oninput="updateClientPill()"></div>
+        <div class="field"><label>Data de Nascimento</label><input type="date" id="cli-nasc" onchange="calcIdade()"></div>
+      </div>
+      <div class="row-fields">
+        <div class="field"><label>Sexo</label>
+          <select id="cli-sexo"><option value="M">Masculino</option><option value="F">Feminino</option></select></div>
+        <div class="field"><label>Altura (m)</label><input type="number" id="cli-altura" placeholder="1.75" step="0.01" oninput="calcIMC()"></div>
+        <div class="field"><label>Peso (kg)</label><input type="number" id="cli-peso" placeholder="80" oninput="calcIMC()"></div>
+      </div>
+      <div class="row-fields">
+        <div class="field"><label>Fumante?</label>
+          <select id="cli-fumante" onchange="calcIMC()"><option value="N">Não</option><option value="S">Sim</option></select></div>
+        <div class="field"><label>Cardiopatia/AVC &lt;60?</label>
+          <select id="cli-cardio" onchange="calcIMC()"><option value="N">Não</option><option value="S">Sim</option></select></div>
+      </div>
+      <div id="imc-result" class="hidden" style="margin-top:4px;margin-bottom:14px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600"></div>
+      <div class="row-fields">
+        <div class="field"><label>Telefone WhatsApp</label><input type="text" id="cli-tel" placeholder="(11) 99999-9999"></div>
+        <div class="field" style="flex:2"><label>Idade calculada</label><input type="text" id="cli-idade-display" readonly style="background:var(--gray1)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apólices importadas -->
+  <div class="card" style="margin-top:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="card-title" style="margin:0"><span class="icon">🗂️</span> Apólices Importadas <span id="apolice-count" class="badge badge-blue" style="margin-left:6px">0</span></div>
+      <button class="btn btn-outline btn-sm" onclick="addManualApolice()">+ Adicionar manualmente</button>
+    </div>
+    <div id="apolices-list">
+      <div class="empty-state">
+        <div class="es-icon">📋</div>
+        <h3>Nenhuma apólice importada</h3>
+        <p>Faça upload do PDF ou clique em "Carregar demo" para testar</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;margin-top:8px">
+    <button class="btn btn-primary btn-lg" onclick="goStep(1)">Avançar para Diagnóstico →</button>
+  </div>
+</div>
+
+<!-- ═══ TELA 1: DIAGNÓSTICO ═══ -->
+<div id="screen-1" class="hidden">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title">🔍 Diagnóstico de Necessidades</div>
+      <div class="sec-sub">Calcule a necessidade real de proteção vs. cobertura atual</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Entradas financeiras -->
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span> Perfil Financeiro</div>
+      <div class="field"><label>Renda mensal líquida (R$)</label>
+        <input type="number" id="fin-renda" placeholder="15000" oninput="calcDiagnostico()"></div>
+      <div class="field"><label>Despesas mensais da família (R$)</label>
+        <input type="number" id="fin-despesas" placeholder="10000" oninput="calcDiagnostico()"></div>
+      <div class="field"><label>Anos de dependência dos filhos</label>
+        <input type="number" id="fin-dependencia" placeholder="20" oninput="calcDiagnostico()"></div>
+      <div class="field"><label>Patrimônio total (R$)</label>
+        <input type="number" id="fin-patrimonio" placeholder="500000" oninput="calcDiagnostico()"></div>
+      <div class="field"><label>Dívidas totais (R$)</label>
+        <input type="number" id="fin-dividas" placeholder="100000" oninput="calcDiagnostico()"></div>
+      <div class="field"><label>% Inventário <span class="tag tag-blue" style="font-size:10px">ajustável</span></label>
+        <input type="range" id="fin-inventario" min="0" max="30" value="10" oninput="document.getElementById('inv-pct').textContent=this.value+'%';calcDiagnostico()" style="margin-top:6px">
+        <span id="inv-pct" style="font-size:13px;font-weight:700;color:var(--blue2)">10%</span>
+      </div>
+    </div>
+
+    <!-- KPIs resultantes -->
+    <div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="kpi"><div class="label">Necessidade Total</div><div class="value" id="kpi-nec">R$ —</div><div class="sub">Capital ideal calculado</div></div>
+        <div class="kpi red"><div class="label">Cobertura Atual</div><div class="value" id="kpi-cob">R$ —</div><div class="sub">Soma das apólices</div></div>
+        <div class="kpi orange"><div class="label">GAP</div><div class="value" id="kpi-gap">R$ —</div><div class="sub">Descoberto</div></div>
+        <div class="kpi"><div class="label">% Comprometimento</div><div class="value" id="kpi-comp">—%</div><div class="sub">Renda usada em prêmios</div></div>
+      </div>
+      <div class="card" style="margin:0">
+        <div class="card-title" style="margin-bottom:12px"><span class="icon">📊</span> Cobertura por Sinistro</div>
+        <div class="chart-wrap"><canvas id="chart-gap"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de gaps -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> Análise de Gaps por Sinistro</div>
+    <table class="tbl" id="gap-table">
+      <thead><tr><th>Sinistro</th><th>Necessidade</th><th>Cobertura Atual</th><th>Gap</th><th>Status</th></tr></thead>
+      <tbody id="gap-tbody"></tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:8px">
+    <button class="btn btn-outline" onclick="goStep(0)">← Voltar</button>
+    <button class="btn btn-primary btn-lg" onclick="goStep(2)">Simular Planos →</button>
+  </div>
+</div>
+
+<!-- ═══ TELA 2: SIMULADOR ═══ -->
+<div id="screen-2" class="hidden">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title">⚡ Simulador de Planos</div>
+      <div class="sec-sub">Configure coberturas e compare cenários em tempo real</div>
+    </div>
+    <div class="toggle-wrap">
+      <span>Mensal</span>
+      <label class="toggle"><input type="checkbox" id="toggle-anual" onchange="renderSimulador()"><span class="toggle-slider"></span></label>
+      <span>Anual</span>
+    </div>
+  </div>
+
+  <!-- Perfil do cliente no simulador -->
+  <div class="card" style="padding:16px 24px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">👤</span><span id="sim-nome-label" style="font-weight:700;font-size:15px">—</span></div>
+      <div class="tag tag-blue" id="sim-idade-tag">— anos</div>
+      <div id="sim-classificacao" class="tag tag-green hidden">⭐ Preferencial</div>
+      <div id="sim-super-pref" class="tag" style="background:#FFF3CD;color:#856404" hidden>🦸 Super Preferencial</div>
+    </div>
+  </div>
+
+  <!-- Configuração do plano -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="icon">🛠️</span> Configurar Coberturas</div>
+
+      <div class="field"><label>Produto Base</label>
+        <select id="sim-produto" onchange="renderSimulador()">
+          <option value="WL">Vida Inteira — Vitalício/Resgatável</option>
+          <option value="TP">Temporário Preferencial (20 anos)</option>
+        </select>
+      </div>
+
+      <!-- Morte Qualquer Causa -->
+      <div style="border:1px solid var(--gray3);border-radius:8px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <b style="font-size:13px">☠️ Morte Qualquer Causa</b>
+          <span class="tag tag-blue">BASE</span>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-value" id="sv-mqc">R$ 1.000.000</div>
+          <input type="range" id="sl-mqc" min="100000" max="5000000" step="50000" value="1000000" oninput="renderSimulador()">
+          <div class="slider-labels"><span>R$ 100k</span><span>R$ 5M</span></div>
+        </div>
+      </div>
+
+      <!-- Invalidez -->
+      <div style="border:1px solid var(--gray3);border-radius:8px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <b style="font-size:13px">🦽 Invalidez Total/Parcial</b>
+          <label class="toggle" style="width:36px;height:20px"><input type="checkbox" id="chk-inv" checked onchange="renderSimulador()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="slider-wrap" id="wrap-inv">
+          <div class="slider-value" id="sv-inv">R$ 500.000</div>
+          <input type="range" id="sl-inv" min="50000" max="2000000" step="50000" value="500000" oninput="renderSimulador()">
+          <div class="slider-labels"><span>R$ 50k</span><span>R$ 2M</span></div>
+        </div>
+      </div>
+
+      <!-- Doenças Graves -->
+      <div style="border:1px solid var(--gray3);border-radius:8px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <b style="font-size:13px">🏥 Doenças Graves</b>
+          <label class="toggle" style="width:36px;height:20px"><input type="checkbox" id="chk-dg" checked onchange="renderSimulador()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="slider-wrap" id="wrap-dg">
+          <div class="slider-value" id="sv-dg">R$ 500.000</div>
+          <input type="range" id="sl-dg" min="50000" max="2000000" step="50000" value="500000" oninput="renderSimulador()">
+          <div class="slider-labels"><span>R$ 50k</span><span>R$ 2M</span></div>
+        </div>
+      </div>
+
+      <!-- Internação -->
+      <div style="border:1px solid var(--gray3);border-radius:8px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <b style="font-size:13px">🏨 Internação (diária)</b>
+          <label class="toggle" style="width:36px;height:20px"><input type="checkbox" id="chk-int" onchange="renderSimulador()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="slider-wrap hidden" id="wrap-int">
+          <div class="slider-value" id="sv-int">R$ 100</div>
+          <input type="range" id="sl-int" min="50" max="500" step="50" value="100" oninput="renderSimulador()">
+          <div class="slider-labels"><span>R$ 50</span><span>R$ 500</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Resultado em tempo real -->
+    <div>
+      <div class="card">
+        <div class="card-title"><span class="icon">💵</span> Prêmio em Tempo Real</div>
+        <div style="text-align:center;padding:16px 0 8px">
+          <div style="font-size:12px;font-weight:600;color:var(--gray4);text-transform:uppercase;letter-spacing:.6px" id="premio-label">PRÊMIO MENSAL</div>
+          <div style="font-size:48px;font-weight:800;color:var(--blue);line-height:1.1" id="premio-total">R$ —</div>
+          <div style="font-size:14px;color:var(--gray4)" id="premio-sub">Preferencial: R$ — | c/ IOF: R$ —</div>
+        </div>
+        <div style="border-top:1px solid var(--gray2);padding-top:14px;margin-top:6px">
+          <table class="tbl" style="font-size:12px" id="premio-breakdown">
+            <thead><tr><th>Cobertura</th><th>CS</th><th>Prêmio</th></tr></thead>
+            <tbody id="premio-tbody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px;padding:12px;background:var(--blue-light);border-radius:8px">
+          <div style="font-size:12px;color:var(--blue2);font-weight:700;margin-bottom:4px">💰 Soma dos Pagamentos (Resgatável)</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue)" id="soma-resgatavel">R$ —</div>
+          <div style="font-size:11px;color:var(--gray4)">Total acumulado de prêmios ao longo do plano</div>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="grid-2" style="margin-top:0">
+        <div class="card" style="margin:0">
+          <div class="card-title" style="font-size:12px"><span class="icon">🥧</span> Prêmios</div>
+          <div class="chart-wrap-sm"><canvas id="chart-pizza-premio"></canvas></div>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="card-title" style="font-size:12px"><span class="icon">🥧</span> Capital</div>
+          <div class="chart-wrap-sm"><canvas id="chart-pizza-capital"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparativo de cenários -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="card-title" style="margin:0"><span class="icon">⚖️</span> Comparar Cenários</div>
+      <button class="btn btn-outline btn-sm" onclick="addScenario()">+ Salvar Cenário Atual</button>
+    </div>
+    <div class="scenario-grid" id="scenario-grid">
+      <div class="empty-state" style="padding:30px;grid-column:1/-1">
+        <div class="es-icon">⚖️</div>
+        <h3>Nenhum cenário salvo</h3>
+        <p>Configure coberturas e clique em "Salvar Cenário Atual"</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:8px">
+    <button class="btn btn-outline" onclick="goStep(1)">← Voltar</button>
+    <button class="btn btn-primary btn-lg" onclick="goStep(3)">Ver Insights de Reunião →</button>
+  </div>
+</div>
+
+<!-- ═══ TELA 3: INSIGHTS ═══ -->
+<div id="screen-3" class="hidden">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title">🧠 Insights para a Reunião</div>
+      <div class="sec-sub">Argumentos, gatilhos e scripts baseados no perfil real do cliente</div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="copyInsights()">📋 Copiar todos</button>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="card-title"><span class="icon">⚡</span> Alertas Prioritários</div>
+        <div id="insights-urgentes"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Oportunidades de Venda</div>
+        <div id="insights-oportunidades"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title"><span class="icon">💬</span> Scripts de Conversão</div>
+        <div id="insights-scripts"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🛡️</span> Respostas para Objeções</div>
+        <div id="insights-objecoes"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Painel de preparação -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📝</span> Checklist da Reunião</div>
+    <div id="checklist-reuniao"></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:8px">
+    <button class="btn btn-outline" onclick="goStep(2)">← Voltar</button>
+    <button class="btn btn-primary btn-lg" onclick="goStep(4)">Ver Apresentação →</button>
+  </div>
+</div>
+
+<!-- ═══ TELA 4: APRESENTAÇÃO ═══ -->
+<div id="screen-4" class="hidden">
+  <div class="sec-header">
+    <div>
+      <div class="sec-title">📊 Apresentação para o Cliente</div>
+      <div class="sec-sub">Resumo visual pronto para compartilhar</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn btn-success" id="btn-whatsapp" onclick="sendWhatsApp()">💬 Enviar WhatsApp</button>
+    </div>
+  </div>
+
+  <!-- Header da proposta -->
+  <div class="card" style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-size:11px;letter-spacing:1px;opacity:.7;margin-bottom:6px">PROPOSTA DE SEGURO</div>
+        <div style="font-size:28px;font-weight:800;margin-bottom:4px" id="apres-nome">—</div>
+        <div style="font-size:14px;opacity:.8" id="apres-info">—</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;opacity:.7;margin-bottom:4px">PRÊMIO MENSAL TOTAL</div>
+        <div style="font-size:36px;font-weight:800" id="apres-total">R$ —</div>
+        <div style="font-size:13px;opacity:.8" id="apres-preferencial">Preferencial: R$ —</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Tabela de coberturas -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> Coberturas Contratadas</div>
+      <table class="tbl" id="apres-table">
+        <thead><tr><th>Sinistro</th><th>Capital Segurado</th><th>Prêmio Mensal</th><th>Prêmio Anual</th></tr></thead>
+        <tbody id="apres-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Gráficos -->
+    <div>
+      <div class="grid-2">
+        <div class="card" style="margin:0">
+          <div class="card-title" style="font-size:12px">🥧 Prêmios Pagos</div>
+          <div class="chart-wrap-sm"><canvas id="apres-pizza-premio"></canvas></div>
+          <div style="text-align:center;font-size:11px;color:var(--gray4);margin-top:8px">
+            <span style="color:var(--orange)">■</span> Alugado &nbsp;
+            <span style="color:var(--blue2)">■</span> Comprado
+          </div>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="card-title" style="font-size:12px">🥧 Capital Segurado</div>
+          <div class="chart-wrap-sm"><canvas id="apres-pizza-capital"></canvas></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-title" style="font-size:12px">📈 Evolução da Cobertura (20 anos)</div>
+        <div class="chart-wrap"><canvas id="apres-line"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nota de rodapé -->
+  <div style="text-align:center;font-size:11px;color:var(--gray4);padding:16px 0">
+    Este é um resumo simplificado. O detalhamento das coberturas, garantias, franquias, carências e exclusões está nas condições gerais e nas apólices.
+    &nbsp;|&nbsp; Análise gerada em <span id="apres-data"></span>
+  </div>
+
+  <div style="display:flex;justify-content:flex-start;margin-top:4px">
+    <button class="btn btn-outline" onclick="goStep(3)">← Voltar</button>
+  </div>
+</div>
+
+</div><!-- /main -->
 
 <script>
-  const SUPABASE_URL = 'https://zvqwjtndvbqryonjplal.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_csV0eBiTNQnUNQuDBlWw0w_NoUYgEtv';
+// ══════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════
+const state = {
+  cliente: { nome:'', nasc:'', sexo:'M', altura:0, peso:0, fumante:'N', cardio:'N', tel:'', idade:0, imc:0, classe:'Normal' },
+  apolices: [],
+  financeiro: { renda:0, despesas:0, dependencia:0, patrimonio:0, dividas:0, inventario:10 },
+  plano: { produto:'WL', mqc:1000000, inv:500000, dg:500000, int:100, usaInv:true, usaDg:true, usaInt:false },
+  diagnostico: { necessidade:0, cobertura:0, gap:0, comprometimento:0 },
+  cenarios: [],
+  charts: {}
+};
 
-  let currentStep = 1;
-  const totalSteps = 7;
+// ══════════════════════════════════════════════
+// TABELAS DE PRÊMIO (Prudential — base simplificada)
+// Formato: { M: { Preferencial: taxa_por_1000, Normal: ... }, F: {...} }
+// Taxa mensal por R$1.000 de CS por faixa etária
+// ══════════════════════════════════════════════
+const PRÊMIO_WL = {
+  // [idade_min, idade_max] => { M: {P, N}, F: {P, N} }
+  ranges: [
+    { min:18, max:25, M:{ P:0.95, N:1.30, SP:0.82 }, F:{ P:0.72, N:0.99, SP:0.62 } },
+    { min:26, max:30, M:{ P:1.15, N:1.58, SP:0.99 }, F:{ P:0.88, N:1.20, SP:0.75 } },
+    { min:31, max:35, M:{ P:1.42, N:1.95, SP:1.22 }, F:{ P:1.08, N:1.48, SP:0.93 } },
+    { min:36, max:40, M:{ P:1.85, N:2.54, SP:1.59 }, F:{ P:1.41, N:1.93, SP:1.21 } },
+    { min:41, max:45, M:{ P:2.45, N:3.36, SP:2.11 }, F:{ P:1.87, N:2.56, SP:1.61 } },
+    { min:46, max:50, M:{ P:3.30, N:4.53, SP:2.84 }, F:{ P:2.52, N:3.46, SP:2.17 } },
+    { min:51, max:55, M:{ P:4.58, N:6.29, SP:3.94 }, F:{ P:3.50, N:4.80, SP:3.01 } },
+    { min:56, max:60, M:{ P:6.40, N:8.78, SP:5.51 }, F:{ P:4.88, N:6.70, SP:4.20 } },
+    { min:61, max:65, M:{ P:9.20, N:12.63, SP:7.92 }, F:{ P:7.02, N:9.63, SP:6.04 } },
+  ]
+};
+const PRÊMIO_TP = { // temporário tem taxa menor
+  ranges: PRÊMIO_WL.ranges.map(r => ({...r, M:{...r.M, P:r.M.P*0.55, N:r.M.N*0.55, SP:r.M.SP*0.55}, F:{...r.F, P:r.F.P*0.55, N:r.F.N*0.55, SP:r.F.SP*0.55}}))
+};
+const OPCIONAL_MULTI = { inv:0.28, dg:0.22, int:5.50 }; // prêmio adicional por 1000 CS (inv/dg) ou por diária (int)
+const IOF = 0.038;
 
-  function goTo(n) {
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step-' + n).classList.add('active');
-    currentStep = n;
-    const pct = Math.round((n / totalSteps) * 100);
-    document.getElementById('progress').style.width = pct + '%';
-    document.getElementById('progress-text').textContent = n + ' / ' + totalSteps;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function getTaxa(idade, sexo, classe, produto) {
+  const tab = produto === 'WL' ? PRÊMIO_WL : PRÊMIO_TP;
+  const row = tab.ranges.find(r => idade >= r.min && idade <= r.max) || tab.ranges[tab.ranges.length-1];
+  const s = sexo === 'M' ? row.M : row.F;
+  if(classe === 'Super Preferencial') return s.SP;
+  if(classe === 'Preferencial') return s.P;
+  return s.N;
+}
+
+function calcPremio(cs, taxa) { return (cs / 1000) * taxa; }
+
+// ══════════════════════════════════════════════
+// NAVEGAÇÃO
+// ══════════════════════════════════════════════
+let currentStep = 0;
+function goStep(n) {
+  if(n > 0 && !state.cliente.nome) { alert('Preencha o nome do cliente antes de avançar.'); return; }
+  document.querySelectorAll('[id^=screen-]').forEach(s => s.classList.add('hidden'));
+  document.getElementById('screen-'+n).classList.remove('hidden');
+  document.querySelectorAll('.step-btn').forEach((b,i) => {
+    b.classList.remove('active','done');
+    if(i < n) b.classList.add('done');
+    if(i === n) b.classList.add('active');
+  });
+  currentStep = n;
+  if(n === 1) { syncFinanceiro(); calcDiagnostico(); }
+  if(n === 2) { renderSimulador(); }
+  if(n === 3) { renderInsights(); }
+  if(n === 4) { renderApresentacao(); }
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════════════════════
+// CLIENTE
+// ══════════════════════════════════════════════
+function updateClientPill() {
+  state.cliente.nome = document.getElementById('cli-nome').value;
+  const pill = document.getElementById('client-pill-wrap');
+  if(state.cliente.nome) {
+    pill.classList.remove('hidden');
+    document.getElementById('topbar-client-name').textContent = state.cliente.nome;
   }
+}
 
-  function getChecked(ids) {
-    return ids.filter(id => {
-      const el = document.getElementById(id);
-      return el && el.checked;
-    }).map(id => document.getElementById(id).parentElement.querySelector('span').textContent.trim());
+function calcIdade() {
+  const nasc = document.getElementById('cli-nasc').value;
+  if(!nasc) return;
+  state.cliente.nasc = nasc;
+  const hoje = new Date(), nascDate = new Date(nasc);
+  let anos = hoje.getFullYear() - nascDate.getFullYear();
+  let meses = hoje.getMonth() - nascDate.getMonth();
+  if(meses < 0){ anos--; meses += 12; }
+  if(hoje.getDate() < nascDate.getDate()) meses--;
+  state.cliente.idade = anos;
+  document.getElementById('cli-idade-display').value = `${anos} anos e ${meses} meses`;
+  document.getElementById('topbar-client-age').textContent = `${anos} anos`;
+  calcIMC();
+}
+
+function calcIMC() {
+  const h = parseFloat(document.getElementById('cli-altura').value);
+  const p = parseFloat(document.getElementById('cli-peso').value);
+  const fumante = document.getElementById('cli-fumante').value;
+  const cardio = document.getElementById('cli-cardio').value;
+  if(!h || !p) return;
+  const imc = p / (h * h);
+  state.cliente.imc = imc;
+  state.cliente.fumante = fumante;
+  state.cliente.cardio = cardio;
+  const el = document.getElementById('imc-result');
+  el.classList.remove('hidden');
+  let classe = 'Normal', cor = 'var(--gray2)', corText = 'var(--gray5)';
+  if(fumante === 'N' && cardio === 'N' && imc < 30) {
+    if(imc <= 27) { classe = 'Super Preferencial'; cor = '#FFF3CD'; corText = '#856404'; }
+    else { classe = 'Preferencial'; cor = 'var(--green-light)'; corText = 'var(--green)'; }
   }
+  state.cliente.classe = classe;
+  el.style.background = cor; el.style.color = corText;
+  const icons = { 'Super Preferencial':'🦸', 'Preferencial':'⭐', 'Normal':'👤' };
+  el.textContent = `${icons[classe]} IMC: ${imc.toFixed(2)} kg/m² — Classificação: ${classe}`;
+}
 
-  function getRadio(name) {
-    const el = document.querySelector('input[name="' + name + '"]:checked');
-    return el ? el.value : null;
-  }
+// ══════════════════════════════════════════════
+// PDF IMPORT
+// ══════════════════════════════════════════════
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  async function submitForm() {
-    const btn = document.getElementById('btn-submit');
-    btn.disabled = true;
-    btn.textContent = 'Salvando...';
+function handleDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if(file && file.type === 'application/pdf') processPdf(file);
+}
 
-    const payload = {
-      tipo: 'mapeamento_tecnico',
-      fase: 'sessao_presencial',
-      formato: 'formulario_interno',
-      coletado_por: 'Guilherme — EA Consult',
-      lido_por: 'formulario',
-      confianca_leitura: 1.0,
-      respostas: {
-        cliente: 'Filipe Magalhães Silva',
-        data_sessao: '2026-03-27',
+function handlePdfUpload(e) {
+  const file = e.target.files[0];
+  if(file) processPdf(file);
+}
 
-        // Bloco 1
-        freq_sistema: getRadio('freq_sistema'),
-        fluxos_sistema: getChecked(['fl_proposta','fl_carteira','fl_seguros','fl_agendamento','fl_relatorio','fl_comunicacao']),
-        atrito_sistema: document.getElementById('atrito_sistema').value.trim(),
-        acesso_mobile: getRadio('acesso_mobile'),
-
-        // Bloco 2
-        registro_posvenda: getChecked(['pv_whatsapp','pv_sistema','pv_planilha','pv_caderno','pv_crm','pv_nao_registra']),
-        freq_followup: getRadio('freq_followup'),
-        dor_posvenda: document.getElementById('dor_posvenda').value.trim(),
-        qtd_clientes: document.getElementById('qtd_clientes').value.trim(),
-
-        // Bloco 3
-        usa_planilha: getRadio('usa_planilha'),
-        conteudo_planilha: document.getElementById('conteudo_planilha').value.trim(),
-        problema_dados: document.getElementById('problema_dados').value.trim(),
-        exportou_dados: getRadio('exportou_dados'),
-
-        // Bloco 4
-        vol_wpp: getRadio('vol_wpp'),
-        tipos_mensagem_wpp: getChecked(['tp_duvidas','tp_renovacao','tp_sinistro','tp_indicacao','tp_proposta','tp_financeiro']),
-        num_wpp: getRadio('num_wpp'),
-        dor_wpp: document.getElementById('dor_wpp').value.trim(),
-
-        // Bloco 5
-        contrato_prudential: getRadio('contrato_pru'),
-        restricao_extensao: getRadio('restricao_ext'),
-        obs_contrato: document.getElementById('obs_contrato').value.trim(),
-        encaminhamento_contrato: getRadio('enc_contrato'),
-
-        // Bloco 6
-        dados_fora_sistema: getChecked(['lg_planilha','lg_wpp','lg_email','lg_crm','lg_nuvem','lg_nao']),
-        conhece_lgpd: getRadio('conhece_lgpd'),
-        reacao_dpa: getRadio('reacao_dpa'),
-        obs_lgpd: document.getElementById('obs_lgpd').value.trim(),
-
-        // Bloco 7
-        cenario_viavel: getRadio('cenario_viavel'),
-        energia_final: getRadio('energia_final'),
-        pendencias_filipe: document.getElementById('pendencias_filipe').value.trim(),
-        insights_surpresa: document.getElementById('insights_surpresa').value.trim(),
-        proximo_passo: document.getElementById('proximo_passo').value.trim()
-      }
-    };
-
-    try {
-      const res = await fetch(SUPABASE_URL + '/rest/v1/briefings?schema=core', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok || res.status === 201) {
-        document.getElementById('form-container').style.display = 'none';
-        document.getElementById('success').style.display = 'block';
-      } else {
-        const err = await res.text();
-        console.error('Supabase error:', err);
-        alert('Erro ao salvar. Verifique a conexão e tente novamente.\n\n' + err);
-        btn.disabled = false;
-        btn.textContent = 'Salvar captura ✓';
-      }
-    } catch (e) {
-      console.error(e);
-      alert('Erro de conexão. Verifique a internet e tente novamente.');
-      btn.disabled = false;
-      btn.textContent = 'Salvar captura ✓';
+async function processPdf(file) {
+  showLoading('Lendo PDF da apólice...');
+  try {
+    const ab = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: ab}).promise;
+    let fullText = '';
+    for(let i=1; i<=pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const tc = await page.getTextContent();
+      fullText += tc.items.map(item => item.str).join(' ') + '\n';
     }
+    const parsed = parsePrudentialPdf(fullText);
+    if(parsed.apolices.length > 0 || parsed.cliente.nome) {
+      applyPdfData(parsed);
+      showPdfStatus(`✅ PDF processado: ${parsed.apolices.length} apólice(s) encontrada(s)`);
+    } else {
+      showPdfStatus('⚠️ Não foi possível extrair dados automaticamente. Verifique o formato do PDF.');
+    }
+  } catch(err) {
+    console.error(err);
+    showPdfStatus('❌ Erro ao ler o PDF. Tente inserir os dados manualmente.');
   }
+  hideLoading();
+}
+
+function parsePrudentialPdf(text) {
+  // ── Parser calibrado para o formato real do portal Prudential (DBClient) ──
+  const result = { cliente: {}, apolices: [] };
+
+  // NOME DO SEGURADO — padrão "Segurado: NOME COMPLETO CPF:"
+  const nomeMatch = text.match(/Segurado[:\s]+([A-ZÀÁÂÃÉÊÍÓÔÕÚÇ][A-ZÀÁÂÃÉÊÍÓÔÕÚÇ\s]{4,60?})\s+CPF/);
+  if(nomeMatch) result.cliente.nome = toTitleCase(nomeMatch[1].trim());
+
+  // DATA DE NASCIMENTO — padrão "Data de Nascimento: DD/MM/YYYY"
+  const nascMatch = text.match(/Data de Nascimento[:\s]+(\d{2})\/(\d{2})\/(\d{4})/);
+  if(nascMatch) result.cliente.nasc = `${nascMatch[3]}-${nascMatch[2]}-${nascMatch[1]}`;
+
+  // SEXO
+  const sexoMatch = text.match(/Sexo[:\s]+(Masculino|Feminino)/i);
+  if(sexoMatch) result.cliente.sexo = sexoMatch[1].toLowerCase() === 'masculino' ? 'M' : 'F';
+
+  // CELULAR
+  const celMatch = text.match(/Celular[:\s]+\((\d{2})\)\s*([\d\s\-]+)/);
+  if(celMatch) result.cliente.tel = celMatch[1] + celMatch[2].replace(/\D/g,'');
+
+  // ── APÓLICES ──
+  // Formato do portal: cada apólice tem bloco "Apólice: NNNNNN ... Descrição das Coberturas"
+  // depois linhas de coberturas com: CÓDIGO NOME CS PRÊMIO_LIQ IOF CLASSE DURAÇÃO TÉRMINO
+  const blocos = text.split(/Apólice:\s*\d+/);
+  const apoliceNums = [...text.matchAll(/Apólice:\s*(\d+)/g)].map(m => m[1]);
+
+  apoliceNums.forEach((num, idx) => {
+    const bloco = blocos[idx+1] || '';
+
+    // Coberturas: linhas com código conhecido
+    // Códigos Prudential: DT=Decrescente Temporário, TP=Temporário Preferencial, WL=Vida Inteira
+    // DDP=Doenças Graves Plus, HC=Renda Hospitalar, PI=Invalidez Total Parcial Acidente
+    // CIB=Cirurgia, BRB=Quebra de Ossos, AF=Assistência Funeral, DR=Doença Renovável
+    const coberRegex = /([A-Z]{2,4}\d{0,2}[A-Z]?)\s+([\w\s\/çãõáéíóúâêôàü\.\-]+?)\s+([\d\.,]{4,})\s+([\d\.,]+)\s+([\d\.,]+)/g;
+    let m;
+    const codsVistos = new Set();
+    while((m = coberRegex.exec(bloco)) !== null) {
+      const cod = m[1];
+      if(codsVistos.has(cod)) continue;
+      // Filtrar falsos positivos (códigos genéricos)
+      if(/^(DE|DO|DA|EM|NO|NA|SE|CO|OU)$/.test(cod)) continue;
+      const csVal = parseReais(m[3]);
+      const premVal = parseReais(m[4]);
+      if(csVal < 100 || premVal < 0.01) continue;
+      codsVistos.add(cod);
+
+      const sinistro = codigoParaSinistro(cod, m[2].trim());
+      const tipo = /^(WL|VL|VID)/.test(cod) ? 'Vitalício' : 'Temporário';
+      const classeMatch = bloco.substring(m.index, m.index+300).match(/Preferencial|Standard|Super\s+Preferencial/i);
+      const classe = classeMatch ? toTitleCase(classeMatch[0]) : 'Standard';
+
+      result.apolices.push({ numero: num, sinistro, cs: csVal, premio: premVal, tipo, classe, codigo: cod });
+    }
+
+    // Se não achou coberturas pelo regex acima, tenta extração simplificada
+    if(!result.apolices.find(a => a.numero === num)) {
+      const csSimples = bloco.match(/([\d]{1,3}\.[\d]{3}\.[\d]{3}(?:,\d{2})?)/);
+      const premSimples = bloco.match(/Prêmio Total[:\s]+([\d.,]+)/i);
+      if(csSimples) {
+        result.apolices.push({
+          numero: num, sinistro: 'Morte Qualquer Causa',
+          cs: parseReais(csSimples[1]), premio: premSimples ? parseReais(premSimples[1]) : 0,
+          tipo: bloco.includes('Vital') || bloco.includes('WL') ? 'Vitalício' : 'Temporário', classe: 'Standard', codigo: 'EXT'
+        });
+      }
+    }
+  });
+
+  // Deduplicar — somar prêmio de coberturas da mesma apólice como item principal
+  // e manter cada cobertura individual para diagnóstico correto
+  return result;
+}
+
+function codigoParaSinistro(cod, nome) {
+  const c = cod.toUpperCase();
+  const n = nome.toLowerCase();
+  if(/^(DT|TP|WL|VL)/.test(c) || n.includes('temporário') || n.includes('vida inteira')) return 'Morte Qualquer Causa';
+  if(/^DDP/.test(c) || n.includes('doen') && n.includes('grav')) return 'Doenças Graves';
+  if(/^HC/.test(c) || n.includes('hospitalar') || n.includes('internação')) return 'Internação';
+  if(/^PI/.test(c) || n.includes('invalidez')) return 'Invalidez Total/Parcial';
+  if(/^CIB/.test(c) || n.includes('cirurgia')) return 'Cirurgias';
+  if(/^BRB/.test(c) || n.includes('quebra') || n.includes('osso')) return 'Quebra de Ossos';
+  if(/^AF/.test(c) || n.includes('funeral')) return 'Assistência Funeral';
+  if(/^DR/.test(c) || n.includes('renovável')) return 'Doença Renovável';
+  if(n.includes('morte') && n.includes('acidental')) return 'Morte Acidental';
+  return nome.length > 3 ? nome : 'Cobertura Geral';
+}
+
+function toTitleCase(str) {
+  const minors = ['de','da','do','das','dos','e'];
+  return str.toLowerCase().split(' ').map((w,i) => {
+    if(i > 0 && minors.includes(w)) return w;
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join(' ');
+}
+
+function detectSinistro(text) {
+  const t = text.toLowerCase();
+  if(t.includes('morte') && t.includes('acident')) return 'Morte Acidental';
+  if(t.includes('invalidez') && t.includes('parcial')) return 'Invalidez Parcial';
+  if(t.includes('invalidez')) return 'Invalidez Total';
+  if(t.includes('doen') && t.includes('grav')) return 'Doenças Graves';
+  if(t.includes('interna')) return 'Internação';
+  return 'Morte Qualquer Causa';
+}
+
+function parseReais(s) {
+  return parseFloat(s.replace(/\./g,'').replace(',','.')) || 0;
+}
+
+function applyPdfData(parsed) {
+  if(parsed.cliente.nome) {
+    document.getElementById('cli-nome').value = parsed.cliente.nome;
+    state.cliente.nome = parsed.cliente.nome;
+    updateClientPill();
+  }
+  if(parsed.cliente.nasc) {
+    document.getElementById('cli-nasc').value = parsed.cliente.nasc;
+    calcIdade();
+  }
+  if(parsed.cliente.sexo) {
+    document.getElementById('cli-sexo').value = parsed.cliente.sexo;
+    state.cliente.sexo = parsed.cliente.sexo;
+  }
+  if(parsed.cliente.tel) {
+    document.getElementById('cli-tel').value = parsed.cliente.tel;
+    state.cliente.tel = parsed.cliente.tel;
+  }
+  // Acrescentar apólices sem duplicar por número+codigo
+  const chaves = new Set(state.apolices.map(a => a.numero+'-'+a.codigo));
+  parsed.apolices.forEach(a => {
+    const chave = a.numero+'-'+(a.codigo||a.sinistro);
+    if(!chaves.has(chave)) { state.apolices.push(a); chaves.add(chave); }
+  });
+  renderApolicesList();
+}
+
+function showPdfStatus(msg) {
+  const el = document.getElementById('pdf-status');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+// ══════════════════════════════════════════════
+// APÓLICES
+// ══════════════════════════════════════════════
+function renderApolicesList() {
+  const list = document.getElementById('apolices-list');
+  document.getElementById('apolice-count').textContent = state.apolices.length;
+  if(state.apolices.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><h3>Nenhuma apólice importada</h3><p>Faça upload do PDF ou clique em "Carregar demo"</p></div>`;
+    return;
+  }
+  list.innerHTML = state.apolices.map((a,i) => `
+    <div class="apolice-item">
+      <div class="ai-icon">${a.tipo==='Vitalício'?'🏆':'📅'}</div>
+      <div class="ai-body">
+        <div class="ai-title">${a.sinistro}</div>
+        <div class="ai-meta">
+          <span>Apólice: <b>${a.numero}</b></span>
+          <span class="tag ${a.tipo==='Vitalício'?'tag-green':'tag-orange'}">${a.tipo}</span>
+        </div>
+      </div>
+      <div class="ai-values">
+        <div class="ai-cs">${fmtR(a.cs)}</div>
+        <div class="ai-premio">${a.premio ? fmtR(a.premio)+'/mês' : 'Prêmio não extraído'}</div>
+      </div>
+      <button onclick="removeApolice(${i})" style="background:none;border:none;color:var(--gray4);font-size:18px;padding:0 4px;margin-left:8px" title="Remover">×</button>
+    </div>
+  `).join('');
+}
+
+function removeApolice(i) {
+  state.apolices.splice(i,1);
+  renderApolicesList();
+}
+
+function addManualApolice() {
+  const num = prompt('Número da apólice:','');
+  if(!num) return;
+  const cs = parseFloat(prompt('Capital Segurado (R$):','1000000'));
+  const premio = parseFloat(prompt('Prêmio mensal (R$, 0 se não souber):','0'));
+  const tipo = confirm('É apólice vitalícia/resgatável? (OK = Vitalício, Cancelar = Temporário)') ? 'Vitalício' : 'Temporário';
+  const sinistros = ['Morte Qualquer Causa','Morte Acidental','Invalidez Total','Invalidez Parcial','Doenças Graves','Internação','Cirurgias'];
+  const sinistro = sinistros[Math.min(parseInt(prompt('Tipo de sinistro:\n0=Morte\n1=Morte Acidental\n2=Invalidez Total\n3=Invalidez Parcial\n4=Doenças Graves\n5=Internação\n6=Cirurgias','0'))||0, sinistros.length-1)];
+  state.apolices.push({ numero: num, sinistro, cs: cs||0, premio: premio||0, tipo });
+  renderApolicesList();
+}
+
+// ══════════════════════════════════════════════
+// DIAGNÓSTICO
+// ══════════════════════════════════════════════
+function syncFinanceiro() {
+  const f = state.financeiro;
+  ['renda','despesas','dependencia','patrimonio','dividas'].forEach(k => {
+    const el = document.getElementById('fin-'+k);
+    if(el && el.value) f[k] = parseFloat(el.value);
+  });
+}
+
+function calcDiagnostico() {
+  syncFinanceiro();
+  const f = state.financeiro;
+  f.inventario = parseInt(document.getElementById('fin-inventario').value);
+
+  // Bloco 1: Inventário
+  const needInv = (f.patrimonio + f.dividas) * (f.inventario / 100) + f.dividas;
+
+  // Bloco 2: Necessidade de Capital (VPL simples das despesas × anos)
+  const needCap = f.despesas * 12 * f.dependencia;
+
+  // Total necessidade
+  const totalNec = needInv + needCap;
+
+  // Cobertura atual
+  const cobMQC = state.apolices.filter(a => a.sinistro === 'Morte Qualquer Causa').reduce((s,a) => s+a.cs, 0);
+  const cobInv = state.apolices.filter(a => a.sinistro.includes('Invalidez')).reduce((s,a) => s+a.cs, 0);
+  const cobDG = state.apolices.filter(a => a.sinistro.includes('Doenças')).reduce((s,a) => s+a.cs, 0);
+  const cobTotal = state.apolices.reduce((s,a) => s+a.cs, 0);
+  const premioTotal = state.apolices.reduce((s,a) => s+a.premio, 0);
+
+  const gap = Math.max(0, totalNec - cobMQC);
+  const comp = f.renda > 0 ? (premioTotal / f.renda) * 100 : 0;
+
+  state.diagnostico = { necessidade: totalNec, cobertura: cobMQC, gap, comprometimento: comp, cobInv, cobDG, premioTotal, needCap, needInv };
+
+  // Atualizar KPIs
+  document.getElementById('kpi-nec').textContent = fmtR(totalNec);
+  const gapEl = document.getElementById('kpi-gap');
+  gapEl.textContent = fmtR(gap);
+  gapEl.parentElement.className = 'kpi ' + (gap > 0 ? 'red' : 'green');
+  document.getElementById('kpi-cob').textContent = fmtR(cobMQC);
+  document.getElementById('kpi-comp').textContent = comp.toFixed(1) + '%';
+  document.getElementById('kpi-comp').parentElement.className = 'kpi ' + (comp > 15 ? 'red' : comp > 8 ? 'orange' : 'green');
+
+  renderGapTable(needCap, cobMQC, cobInv, cobDG);
+  renderChartGap(totalNec, cobMQC, gap);
+}
+
+function renderGapTable(needMorte, cobMorte, cobInv, cobDG) {
+  const f = state.financeiro;
+  const needInv = needMorte * 0.8;
+  const needDG = needMorte * 0.5;
+  const rows = [
+    { s:'Morte Qualquer Causa', nec: state.diagnostico.necessidade, cob: cobMorte },
+    { s:'Invalidez Total/Parcial', nec: needInv, cob: cobInv },
+    { s:'Doenças Graves', nec: needDG, cob: cobDG },
+  ];
+  document.getElementById('gap-tbody').innerHTML = rows.map(r => {
+    const gap = r.cob - r.nec;
+    const pct = r.nec > 0 ? Math.min(100, (r.cob/r.nec)*100) : 100;
+    return `<tr>
+      <td><b>${r.s}</b></td>
+      <td>${fmtR(r.nec)}</td>
+      <td>
+        ${fmtR(r.cob)}
+        <div class="progress-bar" style="margin-top:5px"><div class="progress-fill ${pct>=100?'fill-green':pct>=50?'fill-orange':'fill-red'}" style="width:${pct}%"></div></div>
+      </td>
+      <td class="${gap >= 0 ? 'gap-ok':'gap-neg'}">${gap >= 0 ? '+'+fmtR(gap) : fmtR(gap)}</td>
+      <td>${gap >= 0 ? '<span class="tag tag-green">✅ OK</span>' : '<span class="tag tag-red">⚠️ GAP</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderChartGap(nec, cob, gap) {
+  const ctx = document.getElementById('chart-gap').getContext('2d');
+  if(state.charts.gap) state.charts.gap.destroy();
+  state.charts.gap = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['Necessidade','Cobertura Atual','GAP'],
+      datasets:[{
+        data:[nec, cob, gap],
+        backgroundColor:['rgba(46,80,144,.8)','rgba(27,122,74,.8)','rgba(192,57,43,.8)'],
+        borderRadius:6
+      }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ y:{ ticks:{ callback: v => 'R$'+fmtShort(v) } } } }
+  });
+}
+
+// ══════════════════════════════════════════════
+// SIMULADOR
+// ══════════════════════════════════════════════
+function renderSimulador() {
+  const p = state.plano;
+  p.produto = document.getElementById('sim-produto').value;
+  p.mqc = parseInt(document.getElementById('sl-mqc').value);
+  p.usaInv = document.getElementById('chk-inv').checked;
+  p.usaDg = document.getElementById('chk-dg').checked;
+  p.usaInt = document.getElementById('chk-int').checked;
+  p.inv = parseInt(document.getElementById('sl-inv').value);
+  p.dg = parseInt(document.getElementById('sl-dg').value);
+  p.int = parseInt(document.getElementById('sl-int').value);
+
+  document.getElementById('sv-mqc').textContent = fmtR(p.mqc);
+  document.getElementById('sv-inv').textContent = fmtR(p.inv);
+  document.getElementById('sv-dg').textContent = fmtR(p.dg);
+  document.getElementById('sv-int').textContent = 'R$ '+p.int;
+
+  document.getElementById('wrap-inv').style.display = p.usaInv ? '' : 'none';
+  document.getElementById('wrap-dg').style.display = p.usaDg ? '' : 'none';
+  const wrapInt = document.getElementById('wrap-int');
+  wrapInt.style.display = p.usaInt ? '' : 'none';
+
+  // Labels de nome/idade
+  document.getElementById('sim-nome-label').textContent = state.cliente.nome || 'Cliente';
+  document.getElementById('sim-idade-tag').textContent = state.cliente.idade ? state.cliente.idade + ' anos' : '— anos';
+
+  // Classificação
+  const cl = state.cliente.classe;
+  const simClass = document.getElementById('sim-classificacao');
+  const simSP = document.getElementById('sim-super-pref');
+  simClass.classList.toggle('hidden', cl === 'Normal');
+  simSP.style.display = cl === 'Super Preferencial' ? '' : 'none';
+
+  // Calcular prêmios
+  const idade = state.cliente.idade || 35;
+  const sexo = state.cliente.sexo || 'M';
+  const classe = state.cliente.classe || 'Normal';
+  const isAnual = document.getElementById('toggle-anual').checked;
+  const fator = isAnual ? 12 : 1;
+  const taxa = getTaxa(idade, sexo, classe, p.produto);
+
+  const premMqc = calcPremio(p.mqc, taxa);
+  const premInv = p.usaInv ? (p.inv / 1000) * OPCIONAL_MULTI.inv : 0;
+  const premDg = p.usaDg ? (p.dg / 1000) * OPCIONAL_MULTI.dg : 0;
+  const premInt = p.usaInt ? p.int * OPCIONAL_MULTI.int / 100 : 0;
+
+  const subtotal = premMqc + premInv + premDg + premInt;
+  const withIof = subtotal * (1 + IOF);
+  const prefLabel = classe === 'Normal' ? '' : `Preferencial: ${fmtR(subtotal*fator)} | `;
+
+  // Prêmio Super Preferencial (oculto por padrão, mostrar se SP)
+  const taxaSP = getTaxa(idade, sexo, 'Super Preferencial', p.produto);
+  const premSP = calcPremio(p.mqc, taxaSP) * (1+IOF);
+
+  document.getElementById('premio-label').textContent = isAnual ? 'PRÊMIO ANUAL' : 'PRÊMIO MENSAL';
+  document.getElementById('premio-total').textContent = fmtR(withIof * fator);
+  document.getElementById('premio-sub').textContent = `${prefLabel}c/ IOF: ${fmtR(withIof*fator)}${cl==='Super Preferencial'?' | Super Pref: '+fmtR(premSP*fator):''}`;
+
+  const itens = [
+    { nome:'Morte Qualquer Causa', cs: fmtR(p.mqc), prem: fmtR(premMqc*fator) },
+    ...(p.usaInv ? [{ nome:'Invalidez Total/Parcial', cs: fmtR(p.inv), prem: fmtR(premInv*fator) }] : []),
+    ...(p.usaDg ? [{ nome:'Doenças Graves', cs: fmtR(p.dg), prem: fmtR(premDg*fator) }] : []),
+    ...(p.usaInt ? [{ nome:'Internação (diária)', cs: 'R$ '+p.int, prem: fmtR(premInt*fator) }] : []),
+    { nome:'IOF (3,8%)', cs: '—', prem: fmtR(subtotal*IOF*fator) },
+  ];
+  document.getElementById('premio-tbody').innerHTML = itens.map(it =>
+    `<tr><td>${it.nome}</td><td>${it.cs}</td><td><b>${it.prem}</b></td></tr>`
+  ).join('') + `<tr class="total-row"><td>TOTAL</td><td>—</td><td>${fmtR(withIof*fator)}</td></tr>`;
+
+  // Soma resgatável (estimativa 20 anos)
+  const somaRes = p.produto === 'WL' ? withIof * 12 * 20 : 0;
+  document.getElementById('soma-resgatavel').textContent = p.produto === 'WL' ? fmtR(somaRes) : 'N/A — Plano temporário';
+
+  // Gráficos pizza
+  const capTemp = state.apolices.filter(a=>a.tipo==='Temporário').reduce((s,a)=>s+a.cs,0);
+  const capVital = state.apolices.filter(a=>a.tipo==='Vitalício').reduce((s,a)=>s+a.cs,0);
+  const novoCap = p.mqc + (p.usaInv?p.inv:0) + (p.usaDg?p.dg:0);
+  const totalAlug = capTemp;
+  const totalComp = capVital + (p.produto==='WL'?novoCap:0);
+  const totalAlugPrem = state.apolices.filter(a=>a.tipo==='Temporário').reduce((s,a)=>s+a.premio,0);
+  const totalCompPrem = state.apolices.filter(a=>a.tipo==='Vitalício').reduce((s,a)=>s+a.premio,0) + (p.produto==='WL'?withIof:0);
+
+  renderPizza('chart-pizza-premio', totalAlugPrem||30, totalCompPrem||70, 'Prêmios');
+  renderPizza('chart-pizza-capital', totalAlug||0, totalComp||100, 'Capital');
+}
+
+function renderPizza(id, alug, comp, label) {
+  const ctx = document.getElementById(id).getContext('2d');
+  if(state.charts[id]) state.charts[id].destroy();
+  const total = alug + comp;
+  state.charts[id] = new Chart(ctx, {
+    type:'doughnut',
+    data:{
+      labels:['Alugado','Comprado'],
+      datasets:[{ data:[alug, comp], backgroundColor:['#D4700A','#2E5090'], borderWidth:0, hoverOffset:4 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${((ctx.raw/total)*100).toFixed(0)}%` } }
+      }
+    }
+  });
+}
+
+function addScenario() {
+  const p = state.plano;
+  const idade = state.cliente.idade || 35;
+  const sexo = state.cliente.sexo || 'M';
+  const classe = state.cliente.classe || 'Normal';
+  const taxa = getTaxa(idade, sexo, classe, p.produto);
+  const premMqc = calcPremio(p.mqc, taxa);
+  const premInv = p.usaInv ? (p.inv/1000)*OPCIONAL_MULTI.inv : 0;
+  const premDg = p.usaDg ? (p.dg/1000)*OPCIONAL_MULTI.dg : 0;
+  const premInt = p.usaInt ? p.int*OPCIONAL_MULTI.int/100 : 0;
+  const total = (premMqc+premInv+premDg+premInt)*(1+IOF);
+  const n = state.cenarios.length+1;
+  state.cenarios.push({ label:'Cenário '+n, produto:p.produto, mqc:p.mqc, inv:p.usaInv?p.inv:0, dg:p.usaDg?p.dg:0, int:p.usaInt?p.int:0, total, totalAnual:total*12 });
+  renderCenarios();
+}
+
+function renderCenarios() {
+  const grid = document.getElementById('scenario-grid');
+  if(state.cenarios.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="padding:30px;grid-column:1/-1"><div class="es-icon">⚖️</div><h3>Nenhum cenário salvo</h3><p>Configure coberturas e clique em "Salvar Cenário Atual"</p></div>`;
+    return;
+  }
+  grid.innerHTML = state.cenarios.map((c,i) => `
+    <div class="scenario-col ${i===0?'active':''}">
+      <div class="sc-header">
+        <span>${c.label}</span>
+        <span class="tag ${c.produto==='WL'?'tag-green':'tag-orange'}">${c.produto==='WL'?'Vitalício':'Temporário'}</span>
+      </div>
+      <div class="sc-price">${fmtR(c.total)}<span style="font-size:14px;font-weight:400">/mês</span></div>
+      <div class="sc-anual">${fmtR(c.totalAnual)}/ano</div>
+      ${c.mqc?`<div class="sc-item"><span class="si-label">Morte QC</span><span class="si-val">${fmtShort(c.mqc)}</span></div>`:''}
+      ${c.inv?`<div class="sc-item"><span class="si-label">Invalidez</span><span class="si-val">${fmtShort(c.inv)}</span></div>`:''}
+      ${c.dg?`<div class="sc-item"><span class="si-label">D. Graves</span><span class="si-val">${fmtShort(c.dg)}</span></div>`:''}
+      ${c.int?`<div class="sc-item"><span class="si-label">Internação</span><span class="si-val">R$ ${c.int}/dia</span></div>`:''}
+      <button onclick="state.cenarios.splice(${i},1);renderCenarios()" style="margin-top:10px;background:none;border:1px solid var(--red);color:var(--red);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">Remover</button>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════
+// INSIGHTS COM IA
+// ══════════════════════════════════════════════
+function renderInsights() {
+  const d = state.diagnostico;
+  const c = state.cliente;
+  const p = state.plano;
+  const f = state.financeiro;
+
+  const urgentes = [];
+  const oportunidades = [];
+  const scripts = [];
+  const objecoes = [];
+
+  const gap = d.gap || 0;
+  const pctGap = d.necessidade > 0 ? (gap / d.necessidade) * 100 : 0;
+  const temApolice = state.apolices.length > 0;
+  const apenasTemp = state.apolices.length > 0 && state.apolices.every(a => a.tipo === 'Temporário');
+  const temVital = state.apolices.some(a => a.tipo === 'Vitalício');
+  const comp = d.comprometimento || 0;
+  const nome = c.nome ? c.nome.split(' ')[0] : 'o cliente';
+  const idade = c.idade || 35;
+  const classe = c.classe || 'Normal';
+  const premioAtual = d.premioTotal || 0;
+
+  // ── URGENTES ──
+  if(gap > 500000) urgentes.push({ icon:'🔴', titulo:`GAP crítico de ${fmtR(gap)}`, texto:`A cobertura atual de ${fmtR(d.cobertura)} cobre apenas ${((d.cobertura/d.necessidade)*100).toFixed(0)}% da necessidade calculada de ${fmtR(d.necessidade)}. Qualquer sinistro hoje resultará em déficit financeiro severo para a família.`, tipo:'urgente' });
+
+  if(apenasTemp) urgentes.push({ icon:'⏰', titulo:'100% do portfólio é Temporário (Alugado)', texto:`${nome} está pagando prêmios sem acumular reserva. No vencimento dos contratos, fica sem cobertura e sem nada para resgatar. É literalmente "alugar proteção".`, tipo:'urgente' });
+
+  if(comp > 15) urgentes.push({ icon:'💸', titulo:`Comprometimento de renda elevado: ${comp.toFixed(1)}%`, texto:`${nome} já compromete ${comp.toFixed(1)}% da renda com prêmios. Qualquer redução de renda pode colocar a manutenção das apólices em risco.`, tipo:'urgente' });
+
+  if(classe === 'Preferencial' || classe === 'Super Preferencial') urgentes.push({ icon:'⭐', titulo:`${nome} é ${classe} — janela de oportunidade`, texto:`Com ${idade} anos e IMC ${c.imc?.toFixed(1)}, ${nome} tem a classificação máxima hoje. Cada ano que passa aumenta o prêmio. O melhor momento para contratar é agora.`, tipo:'urgente' });
+
+  // ── OPORTUNIDADES ──
+  if(!temVital && temApolice) oportunidades.push({ icon:'💰', titulo:'Migrar para plano vitalício', texto:`${nome} paga atualmente ${fmtR(premioAtual)}/mês em temporário. Uma migração para vitalício com mesmo custo pode entregar cobertura permanente + reserva resgatável.`, tipo:'oportunidade' });
+
+  if(gap > 0 && gap < 1000000) oportunidades.push({ icon:'🎯', titulo:`Fechar gap de ${fmtR(gap)} com adicional acessível`, texto:`O gap restante pode ser coberto com um prêmio adicional estimado de ${fmtR(gap*getTaxa(idade,c.sexo||'M',classe,'WL')/1000)}/mês. Custo-benefício altíssimo para a tranquilidade da família.`, tipo:'oportunidade' });
+
+  if(!state.apolices.some(a => a.sinistro === 'Doenças Graves')) oportunidades.push({ icon:'🏥', titulo:'Sem cobertura para Doenças Graves', texto:`${nome} não tem proteção para doenças graves (câncer, AVC, infarto). Esta cobertura paga um capital na hora do diagnóstico, quando mais se precisa — antes de qualquer afastamento do trabalho.`, tipo:'oportunidade' });
+
+  if(!state.apolices.some(a => a.sinistro.includes('Invalidez'))) oportunidades.push({ icon:'🦽', titulo:'Sem cobertura para Invalidez', texto:`Invalidez permanente é mais frequente que morte. ${nome} ficaria sem renda e sem cobertura. A cobertura de invalidez garante o mesmo capital em vida.`, tipo:'oportunidade' });
+
+  // ── SCRIPTS ──
+  scripts.push({ icon:'💬', titulo:'Abertura — Contextualizando o diagnóstico', texto:'', script:`"${nome}, preparei um diagnóstico com base nas suas apólices atuais. Antes de falar de qualquer produto, quero garantir que você entende exatamente qual é a sua situação hoje — e o que poderia acontecer com sua família amanhã."` });
+
+  if(apenasTemp) scripts.push({ icon:'🏠', titulo:'Argumento Alugado vs. Comprado', texto:'', script:`"${nome}, você aluga sua casa ou tem casa própria? (ouvir resposta) Imagine pagar aluguel por 20 anos e no final não ter nada — nem a casa, nem o dinheiro de volta. É exatamente isso que acontece com o seguro temporário: você paga, paga, paga… e no vencimento fica sem cobertura e sem reserva. O seguro vitalício é como comprar a casa."` });
+
+  if(gap > 0) scripts.push({ icon:'📊', titulo:'Apresentando o GAP', texto:'', script:`"Olha ${nome}, com base nos dados que você me deu, a sua família precisaria de ${fmtR(d.necessidade)} para manter o padrão de vida atual por ${f.dependencia||20} anos. Você tem hoje ${fmtR(d.cobertura)} de cobertura. Isso deixa um buraco de ${fmtR(gap)} — que alguém na sua família teria que cobrir. Vamos resolver isso?"` });
+
+  if(classe !== 'Normal') scripts.push({ icon:'⭐', titulo:'Usando a classificação como urgência', texto:'', script:`"Boas notícias: com ${idade} anos, não fumante e IMC ${c.imc?.toFixed(1)}, você tem a classificação ${classe} da Prudential — isso significa o menor prêmio da tabela. Mas isso muda com o tempo. Se você contratar hoje, trava essa taxa por toda a vida do plano."` });
+
+  // ── OBJEÇÕES ──
+  objecoes.push({ icon:'🛡️', titulo:'"Já tenho seguro no trabalho"', texto:`Resposta: "O seguro do trabalho tem duas fragilidades: primeiro, você perde quando muda de emprego. Segundo, ele cobre enquanto você trabalha — mas o risco não para quando você sai. Um plano pessoal é portátil e vitalício."`, tipo:'neutro' });
+
+  objecoes.push({ icon:'🛡️', titulo:'"Não tenho dinheiro para isso agora"', texto:`Resposta: "${nome}, entendo. Mas pensa assim: se algo acontecer com você amanhã, sua família vai ter dinheiro para pagar as contas? O seguro não é uma despesa — é a única garantia que o futuro da sua família não depende do que acontece com você hoje. E o prêmio de ${fmtR(premMqcEstimado(idade,c.sexo||'M',classe))}/mês é menos que uma conta de celular."`, tipo:'neutro' });
+
+  objecoes.push({ icon:'🛡️', titulo:'"Vou pensar e te retorno"', texto:`Resposta: "Claro, a decisão é sua. Mas preciso te deixar com uma informação: cada ano que passa, o prêmio aumenta. E se a sua saúde mudar até lá — um exame alterado, qualquer coisa — você pode perder essa classificação ${classe}. O custo de esperar é real."`, tipo:'neutro' });
+
+  objecoes.push({ icon:'🛡️', titulo:'"É muito caro"', texto:`Resposta: "Caro comparado a quê? Comparado a deixar ${fmtR(gap)} de descoberto para a sua família? Se dividirmos ${fmtR(premMqcEstimado(idade,c.sexo||'M',classe))} pelos dias do mês, estamos falando de ${fmtR(premMqcEstimado(idade,c.sexo||'M',classe)/30)} por dia — menos que um café."`, tipo:'neutro' });
+
+  // Renderizar
+  renderInsightGroup('insights-urgentes', urgentes.length ? urgentes : [{icon:'✅', titulo:'Nenhum alerta crítico', texto:'O portfólio atual está relativamente bem estruturado.', tipo:'positivo'}]);
+  renderInsightGroup('insights-oportunidades', oportunidades.length ? oportunidades : [{icon:'✅', titulo:'Portfólio bem coberto', texto:'Não foram identificadas lacunas críticas de cobertura.', tipo:'positivo'}]);
+  renderInsightGroup('insights-scripts', scripts);
+  renderInsightGroup('insights-objecoes', objecoes);
+  renderChecklist();
+}
+
+function premMqcEstimado(idade, sexo, classe) {
+  const taxa = getTaxa(idade, sexo, classe, 'WL');
+  return calcPremio(1000000, taxa) * (1+IOF);
+}
+
+function renderInsightGroup(id, items) {
+  document.getElementById(id).innerHTML = items.map(item => `
+    <div class="insight-card ${item.tipo || 'neutro'}">
+      <div class="ic-icon">${item.icon}</div>
+      <div class="ic-body">
+        <div class="ic-title">${item.titulo}</div>
+        <div class="ic-text">${item.texto}</div>
+        ${item.script ? `<div class="ic-script">"${item.script}"</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderChecklist() {
+  const c = state.cliente;
+  const d = state.diagnostico;
+  const items = [
+    { done: !!c.nome, txt:'Dados do cliente preenchidos' },
+    { done: state.apolices.length > 0, txt:'Apólices importadas/cadastradas' },
+    { done: state.financeiro.renda > 0, txt:'Perfil financeiro preenchido' },
+    { done: d.necessidade > 0, txt:'Diagnóstico de necessidades calculado' },
+    { done: state.cenarios.length > 0, txt:'Pelo menos 1 cenário de plano simulado' },
+    { done: !!(c.classe && c.classe !== 'Normal'), txt:'Classificação Preferencial/Super Preferencial identificada' },
+    { done: false, txt:'Reunião 2 — Sessão de Clareza agendada' },
+  ];
+  document.getElementById('checklist-reuniao').innerHTML = items.map(it => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray2)">
+      <span style="font-size:18px">${it.done?'✅':'⬜'}</span>
+      <span style="font-size:13px;font-weight:${it.done?'500':'400'};color:${it.done?'var(--text)':'var(--gray4)'}">${it.txt}</span>
+    </div>
+  `).join('');
+}
+
+function copyInsights() {
+  const divs = ['insights-urgentes','insights-oportunidades','insights-scripts','insights-objecoes'];
+  let text = `INSIGHTS DE REUNIÃO — ${state.cliente.nome}\n${'='.repeat(50)}\n\n`;
+  divs.forEach(id => {
+    const el = document.getElementById(id);
+    el.querySelectorAll('.insight-card').forEach(card => {
+      text += '▸ ' + card.querySelector('.ic-title').textContent + '\n';
+      text += card.querySelector('.ic-text').textContent + '\n';
+      const s = card.querySelector('.ic-script');
+      if(s) text += s.textContent + '\n';
+      text += '\n';
+    });
+  });
+  navigator.clipboard.writeText(text).then(() => alert('✅ Insights copiados para a área de transferência!'));
+}
+
+// ══════════════════════════════════════════════
+// APRESENTAÇÃO
+// ══════════════════════════════════════════════
+function renderApresentacao() {
+  const c = state.cliente;
+  const p = state.plano;
+  const idade = c.idade || 35;
+  const sexo = c.sexo || 'M';
+  const classe = c.classe || 'Normal';
+  const taxa = getTaxa(idade, sexo, classe, p.produto);
+
+  const premMqc = calcPremio(p.mqc, taxa);
+  const premInv = p.usaInv ? (p.inv/1000)*OPCIONAL_MULTI.inv : 0;
+  const premDg = p.usaDg ? (p.dg/1000)*OPCIONAL_MULTI.dg : 0;
+  const premInt = p.usaInt ? p.int*OPCIONAL_MULTI.int/100 : 0;
+  const subtotal = premMqc + premInv + premDg + premInt;
+  const withIof = subtotal * (1+IOF);
+
+  document.getElementById('apres-nome').textContent = c.nome || '—';
+  document.getElementById('apres-info').textContent = `Data de Nasc.: ${c.nasc||'—'} | Idade: ${idade} anos | ${classe}`;
+  document.getElementById('apres-total').textContent = fmtR(withIof);
+  document.getElementById('apres-preferencial').textContent = 'Preferencial: ' + fmtR(subtotal) + ' | Anual: ' + fmtR(withIof*12);
+  document.getElementById('apres-data').textContent = new Date().toLocaleDateString('pt-BR');
+
+  const linhas = [
+    { s:'Morte Qualquer Causa', sub:'Vitalício/Resgatável', cs:p.mqc, prem:premMqc, anual:premMqc*12 },
+    ...(p.usaInv?[{ s:'Invalidez Total/Parcial', sub:'Opcional', cs:p.inv, prem:premInv, anual:premInv*12 }]:[]),
+    ...(p.usaDg?[{ s:'Doenças Graves', sub:'Opcional', cs:p.dg, prem:premDg, anual:premDg*12 }]:[]),
+    ...(p.usaInt?[{ s:'Internação Hospitalar', sub:'R$ '+p.int+'/dia', cs:'—', prem:premInt, anual:premInt*12 }]:[]),
+  ];
+  document.getElementById('apres-tbody').innerHTML = linhas.map(l => `
+    <tr>
+      <td><b>${l.s}</b><br><span style="font-size:11px;color:var(--gray4)">${l.sub}</span></td>
+      <td>${typeof l.cs === 'number' ? fmtR(l.cs) : l.cs}</td>
+      <td><b>${fmtR(l.prem)}</b></td>
+      <td>${fmtR(l.anual)}</td>
+    </tr>
+  `).join('') + `
+    <tr style="background:var(--gray2)"><td colspan="2"><b>sub-total OPCIONAIS</b></td><td><b>${fmtR(premInv+premDg+premInt)}</b></td><td>${fmtR((premInv+premDg+premInt)*12)}</td></tr>
+    <tr class="total-row"><td colspan="2"><b>TOTAL</b></td><td><b>${fmtR(withIof)}</b></td><td><b>${fmtR(withIof*12)}</b></td></tr>
+    <tr><td colspan="2" style="font-size:12px;color:var(--gray4)">Preferencial</td><td>${fmtR(subtotal)}</td><td>${fmtR(subtotal*12)}</td></tr>
+  `;
+
+  // Pizzas de apresentação
+  const capTemp = state.apolices.filter(a=>a.tipo==='Temporário').reduce((s,a)=>s+a.cs,0);
+  const novoCap = p.mqc + (p.usaInv?p.inv:0) + (p.usaDg?p.dg:0);
+  const compCap = novoCap + state.apolices.filter(a=>a.tipo==='Vitalício').reduce((s,a)=>s+a.cs,0);
+  renderPizza('apres-pizza-premio', state.apolices.filter(a=>a.tipo==='Temporário').reduce((s,a)=>s+a.premio,0)||20, withIof, 'Prêmios');
+  renderPizza('apres-pizza-capital', capTemp||0, compCap||100, 'Capital');
+
+  // Gráfico de linha (evolução)
+  renderLineChart();
+}
+
+function renderLineChart() {
+  const ctx = document.getElementById('apres-line').getContext('2d');
+  if(state.charts.line) state.charts.line.destroy();
+  const anos = Array.from({length:21},(_,i)=>i);
+  const p = state.plano;
+  const csVital = p.mqc + (p.usaInv?p.inv:0) + (p.usaDg?p.dg:0);
+  const csTemp = state.apolices.filter(a=>a.tipo==='Temporário').reduce((s,a)=>s+a.cs,0);
+  const coberturaVital = anos.map(() => csVital);
+  const coberturaTemporal = anos.map(i => i < 20 ? csTemp : 0);
+  state.charts.line = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: anos.map(i => 'Ano '+i),
+      datasets:[
+        { label:'Vitalício (novo)', data:coberturaVital, borderColor:'#2E5090', backgroundColor:'rgba(46,80,144,.1)', fill:true, tension:.3 },
+        { label:'Temporário (atual)', data:coberturaTemporal, borderColor:'#D4700A', backgroundColor:'rgba(212,112,10,.08)', fill:true, tension:.3, borderDash:[5,5] }
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom' } },
+      scales:{ y:{ ticks:{ callback: v => 'R$'+fmtShort(v) } } }
+    }
+  });
+}
+
+function sendWhatsApp() {
+  const tel = document.getElementById('cli-tel').value.replace(/\D/g,'');
+  if(!tel) { alert('Preencha o telefone WhatsApp do cliente na tela 1.'); return; }
+  const c = state.cliente;
+  const p = state.plano;
+  const idade = c.idade || 35;
+  const sexo = c.sexo || 'M';
+  const classe = c.classe || 'Normal';
+  const taxa = getTaxa(idade, sexo, classe, p.produto);
+  const withIof = (calcPremio(p.mqc, taxa) + (p.usaInv?(p.inv/1000)*OPCIONAL_MULTI.inv:0) + (p.usaDg?(p.dg/1000)*OPCIONAL_MULTI.dg:0)) * (1+IOF);
+
+  const msg = `🛡️ *Proposta de Seguro — Prudential*\n\nOlá ${c.nome}!\n\nSegue o resumo da sua proposta personalizada:\n\n👤 *${c.nome}* — ${idade} anos | ${classe}\n\n💼 *Coberturas:*\n• Morte Qualquer Causa: ${fmtR(p.mqc)}\n${p.usaInv?`• Invalidez: ${fmtR(p.inv)}\n`:''}${p.usaDg?`• Doenças Graves: ${fmtR(p.dg)}\n`:''}${p.usaInt?`• Internação: R$ ${p.int}/dia\n`:''}\n💰 *Prêmio Mensal: ${fmtR(withIof)}*\n📅 Anual: ${fmtR(withIof*12)}\n\nEste é um resumo simplificado. Vamos conversar para esclarecer todos os detalhes?\n\n_EA Consult — LifePlanner Pro_`;
+  window.open('https://wa.me/55'+tel+'?text='+encodeURIComponent(msg), '_blank');
+}
+
+// ══════════════════════════════════════════════
+// DEMO DATA
+// ══════════════════════════════════════════════
+function loadDemo() {
+  // ── Dados reais extraídos do PDF (apólices 001878636 e 001619334) ──
+  document.getElementById('cli-nome').value = 'Luis Guilherme Elisei Almada';
+  document.getElementById('cli-nasc').value = '1984-02-15';
+  document.getElementById('cli-sexo').value = 'M';
+  document.getElementById('cli-altura').value = '1.78';
+  document.getElementById('cli-peso').value = '82';
+  document.getElementById('cli-fumante').value = 'N';
+  document.getElementById('cli-cardio').value = 'N';
+  document.getElementById('cli-tel').value = '31984598320';
+  calcIdade(); calcIMC(); updateClientPill();
+
+  // Apólice 001619334 — TP Preferencial 10 anos — CS R$2.410.302 — R$488,91/mês
+  // Apólice 001878636 — 6 coberturas (DT20G + DDP5G + HC05G + PI05G + CIB5G + BRB5G) — R$272,26/mês
+  state.apolices = [
+    { numero:'001619334', sinistro:'Morte Qualquer Causa', cs:2410302, premio:488.91, tipo:'Temporário', classe:'Preferencial', codigo:'TP10G' },
+    { numero:'001878636', sinistro:'Morte Qualquer Causa', cs:124877, premio:56.39, tipo:'Temporário', classe:'Standard', codigo:'DT20G' },
+    { numero:'001878636', sinistro:'Doenças Graves', cs:262900, premio:93.58, tipo:'Temporário', classe:'Standard', codigo:'DDP5G' },
+    { numero:'001878636', sinistro:'Internação', cs:525.80, premio:38.98, tipo:'Temporário', classe:'Standard', codigo:'HC05G' },
+    { numero:'001878636', sinistro:'Invalidez Total/Parcial', cs:525800, premio:30.89, tipo:'Temporário', classe:'Standard', codigo:'PI05G' },
+    { numero:'001878636', sinistro:'Cirurgias', cs:10516, premio:18.52, tipo:'Temporário', classe:'Standard', codigo:'CIB5G' },
+    { numero:'001878636', sinistro:'Quebra de Ossos', cs:105160, premio:33.90, tipo:'Temporário', classe:'Standard', codigo:'BRB5G' },
+  ];
+  renderApolicesList();
+
+  // Perfil financeiro estimado (engenheiro civil, 42 anos, BH)
+  document.getElementById('fin-renda').value = 30000;
+  document.getElementById('fin-despesas').value = 18000;
+  document.getElementById('fin-dependencia').value = 25;
+  document.getElementById('fin-patrimonio').value = 1200000;
+  document.getElementById('fin-dividas').value = 350000;
+  document.getElementById('fin-inventario').value = 10;
+  document.getElementById('inv-pct').textContent = '10%';
+
+  showPdfStatus('✅ Apólices reais carregadas: 001619334 (R$488,91/mês) + 001878636 (R$272,26/mês) — Total atual: R$761,17/mês');
+}
+
+// ══════════════════════════════════════════════
+// UTILITÁRIOS
+// ══════════════════════════════════════════════
+function fmtR(v) {
+  return 'R$ ' + (v||0).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function fmtShort(v) {
+  if(v >= 1e6) return (v/1e6).toFixed(1)+'M';
+  if(v >= 1e3) return (v/1e3).toFixed(0)+'k';
+  return v.toFixed(0);
+}
+
+function showLoading(msg) {
+  document.getElementById('loading-msg').textContent = msg;
+  document.getElementById('loading-overlay').classList.remove('hidden');
+}
+function hideLoading() {
+  document.getElementById('loading-overlay').classList.add('hidden');
+}
+
+// Init
+document.getElementById('apres-data').textContent = new Date().toLocaleDateString('pt-BR');
 </script>
 </body>
 </html>
